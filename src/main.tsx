@@ -2,6 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
+// Axios
+import './config/axios'
+
 // Router
 import router from './router/router'
 

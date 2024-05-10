@@ -1,6 +1,7 @@
 // Pages
 import React from 'react';
 import LoginPage from '../pages/LoginPage'
+import MainPage from '../pages/MainPage'
 
 // Router
 import { 
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <MainPage />,
   },
 ]);
 
