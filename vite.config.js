@@ -8,5 +8,5 @@ export default defineConfig({
       input: './src/',
     },
   },
-  plugins: [react()],
+  plugins: [react()], 
 })
