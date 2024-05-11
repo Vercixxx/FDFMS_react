@@ -1,19 +1,29 @@
 import * as React from "react";
-import { List, ListItem, Divider, Menu, MenuItem, Grid } from "@mui/material";
-
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {
+  List,
+  ListItem,
+  Divider,
+  Menu,
+  MenuItem,
+  Grid,
+  MenuProps,
+} from "@mui/material";
 
 import { styled, alpha } from "@mui/material/styles";
 
+// Redux
+// import { useDispatch } from "react-redux";
+// import { setCurrentMainComponent } from "../../store/currentMainComponentSlice";
+
 // Icons
 import Icon from "@mdi/react";
-import { mdiAccountGroup } from "@mdi/js";
+import { mdiAccountGroup, mdiDotsHorizontal, mdiMailbox } from "@mdi/js";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 interface MyMenuItem {
   title: string;
   icon: string;
-  onClick: () => void | undefined;
+  onClick: () => void,
   options: MyMenuItem[];
 }
 
@@ -21,12 +31,14 @@ interface MyMenuItem {
 const UsersButton: MyMenuItem = {
   title: "Users",
   icon: mdiAccountGroup,
-  onClick: () => console.log("Users clicked"),
+  onClick: () => {
+    console.log("Add User clicked");
+  },
   options: [
     {
       title: "Add User",
       icon: mdiAccountGroup,
-      onClick: () => console.log("Add User clicked"),
+      onClick: () => console.log("Add Users clicked"),
       options: [],
     },
     {
@@ -40,7 +52,7 @@ const UsersButton: MyMenuItem = {
 
 const OtherButton: MyMenuItem = {
   title: "Other",
-  icon: mdiAccountGroup,
+  icon: mdiDotsHorizontal,
   onClick: () => console.log("Other clicked"),
   options: [
     {
@@ -60,7 +72,7 @@ const OtherButton: MyMenuItem = {
 
 const MailboxButton: MyMenuItem = {
   title: "Mailbox",
-  icon: mdiAccountGroup,
+  icon: mdiMailbox,
   onClick: () => console.log("Mailbox clicked"),
   options: [
     {
@@ -135,6 +147,8 @@ const MyStyledMenuItem: React.FC<{ ItemObject: MyMenuItem }> = ({
     setAnchorEl(null);
   };
 
+  // Redux
+
   return (
     <div className="min-w-full ">
       <div
@@ -182,6 +196,7 @@ const MyStyledMenuItem: React.FC<{ ItemObject: MyMenuItem }> = ({
       >
         {ItemObject.options.map((item, index) => (
           <MenuItem key={index} onClick={item.onClick}>
+            <Icon path={item.icon} size={1} />
             {item.title}
           </MenuItem>
         ))}
@@ -191,16 +206,16 @@ const MyStyledMenuItem: React.FC<{ ItemObject: MyMenuItem }> = ({
 };
 
 export default function HRDrawer() {
+
   return (
     <div>
-      <List>
+    <List>
         {[UsersButton, OtherButton, MailboxButton].map((button, index) => (
           <ListItem key={index}>
             <MyStyledMenuItem ItemObject={button} />
           </ListItem>
         ))}
       </List>
-      <Divider />
     </div>
   );
 }
