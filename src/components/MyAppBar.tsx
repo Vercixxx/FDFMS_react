@@ -9,8 +9,17 @@ import { mdiThemeLightDark, mdiLogout } from "@mdi/js";
 // Components
 import { MyBreadcrumb } from "./MyBreadcrumb";
 
+// Logout modal
+import LogOutModal from "./LogOutModal";
 
 const MyAppBar = () => {
+  const [openLogOutModal, setOpenLogOutModal] = React.useState(false);
+
+  const showLogOutModal = () => {
+    setOpenLogOutModal(true);
+  }
+
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: "rgba(50,100 ,2,0.7)" }}>
@@ -34,7 +43,8 @@ const MyAppBar = () => {
           </IconButton>
 
           {/* Logout */}
-          <IconButton color="inherit">
+          <LogOutModal openModal={openLogOutModal} setOpenModal={setOpenLogOutModal} />
+          <IconButton color="inherit" onClick={showLogOutModal}>
             <Icon path={mdiLogout} size={1} />
           </IconButton>
         </Toolbar>
