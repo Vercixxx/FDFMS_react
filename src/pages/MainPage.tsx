@@ -7,6 +7,9 @@ import { Grid } from "@mui/material";
 // import { RootState } from "../store";
 // import { setCurrentMainComponent } from "../store/currentMainComponentSlice";
 
+// Menu
+import ExampleMenu from "../components/Menus/ExampleMenu";
+
 // Components
 import MyAppBar from "../components/MyAppBar";
 import MyDrawer from "../components/MyDrawer";
@@ -24,8 +27,9 @@ const MainPage = () => {
 
       <div className=" h-screen text-black">
         <Grid container spacing={0}>
-          <Grid item xs={2} className="">
-            <MyDrawer />
+          <Grid item className="">
+            {/* <MyDrawer /> */}
+            <ExampleMenu />
           </Grid>
           <Grid item xs={10}>
             Some content
