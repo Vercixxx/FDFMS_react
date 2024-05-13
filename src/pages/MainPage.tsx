@@ -3,12 +3,12 @@ import * as React from "react";
 import { Grid } from "@mui/material";
 
 // Redux
-// import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { RootState } from "../store";
 // import { setCurrentMainComponent } from "../store/currentMainComponentSlice";
 
 // Menu
-import ExampleMenu from "../components/Menus/ExampleMenu";
+import ExampleMenu from "../components/Menus/HRMenu";
 
 // Components
 import MyAppBar from "../components/MyAppBar";
@@ -17,9 +17,19 @@ import MyDrawer from "../components/MyDrawer";
 // Pages
 import HRAddUserComponent from "./HR/AddUser";
 
+const componentsOptions = {
+  HRAddUserComponent,
+};
 
 const MainPage = () => {
+  const currentMainComponent = useSelector(
+    (state: any) => state.currentMainComponent.value
+  );
+  const currentMainComponentProps = useSelector(
+    (state: any) => state.currentMainComponent.props
+  );
 
+  const Component = componentsOptions[currentMainComponent];
 
   return (
     <div>
@@ -32,7 +42,11 @@ const MainPage = () => {
             <ExampleMenu />
           </Grid>
           <Grid item xs={10}>
-            Some content
+            {Component ? (
+              <Component {...currentMainComponentProps} />
+            ) : (
+              "Component not found"
+            )}
           </Grid>
         </Grid>
       </div>

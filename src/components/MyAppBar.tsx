@@ -34,7 +34,8 @@ const MyAppBar = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <MyBreadcrumb />
+            {/* <MyBreadcrumb /> */}
+            Dashboard
           </Typography>
 
           {/* Theme */}
