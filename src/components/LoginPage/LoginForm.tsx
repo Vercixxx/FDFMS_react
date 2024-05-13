@@ -5,7 +5,11 @@ import { KeyOutlined } from "@mui/icons-material";
 
 // Component UI
 import LoadingButton from "@mui/lab/LoadingButton";
-import { TextField, Box } from "@mui/material";
+
+// Ant Design
+import { UserOutlined } from "@ant-design/icons";
+import { ConfigProvider, Input, Button } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 // Login function
 import { SignInUser } from "../../scripts/user";
@@ -19,89 +23,89 @@ const LoginForm = () => {
 
   const [loading, setLoading] = React.useState(false);
 
-
   const navigate = useNavigate();
 
-  // const Login = async (event) => {
-  //   event.preventDefault();
+  const Login = async (event) => {
+    event.preventDefault();
 
-  //   const username = event.target.username;
-  //   const password = event.target.password;
+    setLoading(true);
+    console.log(username);
 
-  //   const navigate = useNavigate();
+    const response = await SignInUser(username, password);
 
-  //   setLoading(true);
+    if (response) {
+      navigate("/dashboard");
+    } else {
+      alert("Invalid credentials");
+    }
 
-  //   const response = await SignInUser(username, password);
-
-  //   if (response) {
-  //     navigate("/dashboard");
-  //   } else {
-  //     alert("Invalid credentials");
-  //   }
-
-  //   setLoading(false);
-  // };
+    setLoading(false);
+  };
 
   return (
-    <form >
-      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-        {/* Icon */}
-        <AccountCircle sx={{ color: "white", mr: 1, my: 0.5 }} />
-        {/* Icon */}
-        <TextField
-          label="Username"
-          required
-          value={username}
-          variant="standard"
-          id="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </Box>
-
-      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-        {/* Icon */}
-        <KeyOutlined sx={{ color: "white", mr: 1, my: 0.5 }} />
-        {/* Icon */}
-        <TextField
-          label="Password"
-          type="password"
-          required
+    <form>
+      <div className="mb-4">
+        <ConfigProvider
+          theme={{
+            components: {
+              Input: {},
+            },
+          }}
+        >
+          <Input
+            size="large"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            disabled={loading}
+            prefix={<UserOutlined />}
+          />
+        </ConfigProvider>
+      </div>
+      <div className="mb-4">
+        <Input.Password
+          size="large"
+          id="password"
           value={password}
-          variant="standard"
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          disabled={loading}
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
         />
-      </Box>
+      </div>
 
       {/* Button */}
-      <LoadingButton
+      <Button type="primary" loading={loading} onClick={Login}>
+        Sign in
+      </Button>
+      {/* <LoadingButton
         size="large"
         color="success"
-        onClick={
-          async (event) => {
-            event.preventDefault();
+        onClick={async (event) => {
+          event.preventDefault();
 
+          setLoading(true);
 
-            setLoading(true);
+          console.log(username, password);
 
-            console.log(username, password);
+          const response = await SignInUser(username, password);
 
-            const response = await SignInUser(username, password);
-
-            if (response) {
-              navigate("/dashboard");
-            } else {
-              alert("Invalid credentials");
-            }
-
-            setLoading(false);
+          if (response) {
+            navigate("/dashboard");
+          } else {
+            alert("Invalid credentials");
           }
-        }
+
+          setLoading(false);
+        }}
         loading={loading}
         variant="contained"
       >
         <span>Login</span>
-      </LoadingButton>
+      </LoadingButton> */}
 
       {/* Button */}
     </form>

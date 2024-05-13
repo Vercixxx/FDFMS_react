@@ -27,8 +27,8 @@ const LoginPage = () => {
       <Grid
         container
         spacing={0}
-        className="p-8 text-black shadow-lg w-screen"
-        style={{ backgroundColor: "rgba(200, 200, 200, 0.6)" }}
+        className="text-black shadow-lg w-screen"
+        style={{ backgroundColor: "rgba(200, 200, 200, 0.6)", height: "30vh"}}
       >
         {/* Text */}
         <Grid xs={6} display="flex" justifyContent="center" alignItems="center" className="text-3xl text-wrap font-black">
@@ -37,7 +37,7 @@ const LoginPage = () => {
         {/* Text */}
 
         {/* Form */}
-        <Grid xs={6} display="flex" justifyContent="center" alignItems="center">
+        <Grid xs={6} display="flex" justifyContent="center" alignItems="center" className="">
             <LoginForm />
         </Grid>
         {/* Form */}
