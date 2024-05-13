@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+
+
+
 interface CurrentMainComponentState {
   value: string;
   props?: any; 

@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 import { mdiThemeLightDark, mdiLogout } from "@mdi/js";
 
 // Components
-import { MyBreadcrumb } from "./MyBreadcrumb";
+import MyBreadcrumb from "./MyBreadcrumb";
 
 // Logout modal
 import LogOutModal from "./LogOutModal";
@@ -17,41 +17,53 @@ const MyAppBar = () => {
 
   const showLogOutModal = () => {
     setOpenLogOutModal(true);
-  }
-
+  };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "rgba(50,100 ,2,0.7)" }}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {/* <MyBreadcrumb /> */}
-            Dashboard
-          </Typography>
+    // <Box sx={{ flexGrow: 1 }}>
+    //   <AppBar
+    //     position="fixed"
+    //     className="mb-5"
+    //     sx={{ bgcolor: "rgba(50,100 ,2,0.3)", color: "black" }}
+    //   >
+    <div
+      className="grid grid-cols-12 gap-4 py-2 bg-green-500 text-white shadow-md"
 
-          {/* Theme */}
-          <IconButton color="inherit">
-            <Icon path={mdiThemeLightDark} size={1} />
-          </IconButton>
+    >
+      {/* 1 */}
+      <div className="col-span-1 flex justify-start items-center ps-4">
+        FDFMS
+      </div>
+      {/* 1 */}
 
-          {/* Logout */}
-          <LogOutModal openModal={openLogOutModal} setOpenModal={setOpenLogOutModal} />
-          <IconButton color="inherit" onClick={showLogOutModal}>
-            <Icon path={mdiLogout} size={1} />
-          </IconButton>
-        </Toolbar>
+      {/* 2 */}
+      <div className="col-span-10 flex justify-start items-center">
+        <MyBreadcrumb />
+      </div>
+      {/* 2 */}
 
-      </AppBar>
-    </Box>
+      {/* 3 */}
+      <div className="col-span-1 flex justify-end items-center pe-4">
+        {/* Theme */}
+        <IconButton color="inherit"  className="hover:scale-110">
+          <Icon path={mdiThemeLightDark} size={1} />
+        </IconButton>
+        {/* Theme */}
+
+        {/* Logout */}
+        <LogOutModal
+          openModal={openLogOutModal}
+          setOpenModal={setOpenLogOutModal}
+        />
+        <IconButton color="inherit" onClick={showLogOutModal} className="hover:scale-110">
+          <Icon path={mdiLogout} size={1} />
+        </IconButton>
+        {/* Logout */}
+      </div>
+      {/* 3 */}
+    </div>
+    //   </AppBar>
+    // </Box>
   );
 };
 
