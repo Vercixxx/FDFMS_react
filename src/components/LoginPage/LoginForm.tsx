@@ -78,7 +78,7 @@ const LoginForm = () => {
       </div>
 
       {/* Button */}
-      <Button type="primary" loading={loading} onClick={Login}>
+      <Button type="text" loading={loading} onClick={Login} block className="font-black text-xl pb-8">
         Sign in
       </Button>
       {/* <LoadingButton

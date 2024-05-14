@@ -32,21 +32,19 @@ const MainPage = () => {
   const Component = componentsOptions[currentMainComponent];
 
   return (
-    <div className="bg-gradient-to-r from-slate-400 to-slate-800 ">
-      <div>
-        <MyAppBar />
-      </div>
-
-      <div
-        className="h-screen text-black"
-        style={{ height: "2000px" }}
-      >
-        <Grid container spacing={0}>
-          <Grid item className="">
-            {/* <MyDrawer /> */}
+    <div className="text-white" style={{ backgroundColor: "rgba(15,18,20,1)" }}>
+      <div className="h-screen " style={{ height: "2000px" }}>
+        <Grid container columnSpacing={3}>
+          <Grid item xs={2} className="h-screen" style={{ backgroundColor: "rgba(30,42,70,1)" }}>
             <HRMenu />
           </Grid>
+
+
           <Grid item xs={10}>
+            <div className="mb-10">
+              <MyAppBar />
+            </div>
+
             {Component ? (
               <Component {...currentMainComponentProps} />
             ) : (
