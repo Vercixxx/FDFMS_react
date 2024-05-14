@@ -73,6 +73,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
+import FlagIcon from "@mui/icons-material/Flag";
 
 interface Path {
   title?: string;
@@ -88,6 +89,7 @@ const paths: Path[] = [
     icon: HomeIcon,
   },
 
+  // HR
   {
     title: "HRAddUserComponent",
     component: "HRAddUserComponent",
@@ -107,4 +109,25 @@ const paths: Path[] = [
       },
     ],
   },
+  // HR
+
+
+
+  // All
+  {
+    title: "ManageCountriesComponent",
+    component: "ManageCountriesComponent",
+    icon: FlagIcon,
+    path: [
+      {
+        title: "Other",
+        icon: FlagIcon,
+      },
+      {
+        title: "Manage countries",
+        icon: FlagIcon,
+      },
+    ],
+  }
+  // All
 ];

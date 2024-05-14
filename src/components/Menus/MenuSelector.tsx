@@ -50,6 +50,16 @@ const MyMenu: React.FC = () => {
   );
   const dispatch = useDispatch();
 
+  const goHome = () => {
+    dispatch(
+      setCurrentMainComponent({
+        value: "HomePage",
+        props: {},
+      })
+    );
+  }
+
+
   const handleClick = (item: MenuItem) => {
     const isRootItem = items.some((rootItem) => rootItem.key === item.key);
 
@@ -76,7 +86,7 @@ const MyMenu: React.FC = () => {
       }
 
       setSelectedItem(item);
-      console.log(item);
+      console.log(item.key);
 
       switch (item.key) {
         case "HRAddUserComponent":
@@ -95,6 +105,14 @@ const MyMenu: React.FC = () => {
             })
           );
           break;
+        case "ManageCountriesComponent":
+          dispatch(
+            setCurrentMainComponent({
+              value: item.key,
+              props: {},
+            })
+          );
+          break;
       }
     }
   };
@@ -109,8 +127,8 @@ const MyMenu: React.FC = () => {
         <ListItem
           className={`hover:scale-105 hover:bg-blue-800/50 active:scale-100 ${
             item.label === selectedItem.label
-              ? "transition-colors duration-300 ease-in-out bg-blue-800/50"
-              : "transition-colors duration-300 ease-in-out bg-transparent"
+              ? "transition-colors duration-150 ease-in-out bg-blue-800/50"
+              : "transition-colors duration-150 ease-in-out bg-transparent"
           }`}
           sx={{ borderRadius: 2 }}
         >
@@ -139,7 +157,7 @@ const MyMenu: React.FC = () => {
   return (
     <div>
       {/* 1 */}
-      <div className="flex items-center">
+      <div className="flex items-center cursor-pointer" onClick={goHome}>
         <div>
           <img src={logo} alt="logo" className="w-32 rounded-full" />
         </div>

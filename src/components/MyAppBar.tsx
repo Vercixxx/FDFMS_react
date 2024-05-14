@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import { Zoom, Tooltip, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 // Icons
@@ -31,7 +31,9 @@ const MyAppBar = () => {
       <div className="col-span-2 flex justify-end items-center pe-4">
         {/* Theme */}
         <IconButton color="inherit" className="hover:scale-110">
-          <Icon path={mdiThemeLightDark} size={1} />
+          <Tooltip title="Change theme" arrow TransitionComponent={Zoom}>
+            <Icon path={mdiThemeLightDark} size={1.3} />
+          </Tooltip>
         </IconButton>
         {/* Theme */}
 
@@ -45,7 +47,9 @@ const MyAppBar = () => {
           onClick={showLogOutModal}
           className="hover:scale-110"
         >
-          <Icon path={mdiLogout} size={1} />
+          <Tooltip title="Log out" arrow TransitionComponent={Zoom}>
+            <Icon path={mdiLogout} size={1.3} />
+          </Tooltip>
         </IconButton>
         {/* Logout */}
       </div>

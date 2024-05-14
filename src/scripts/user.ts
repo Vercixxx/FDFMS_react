@@ -14,6 +14,9 @@ export const SignInUser = async (username: String, password: String) => {
         sessionStorage.setItem('token', JSON.stringify(response.data.jwt));
         sessionStorage.setItem('userData', JSON.stringify(response.data.data));
 
+
+        axios.defaults.headers.common['Authorization'] = `JWT ${response.data.jwt.access}`;
+
         return true;
 
     } catch (error) {

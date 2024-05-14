@@ -42,7 +42,7 @@ const HRMenuItems: MenuItem[] = [
     key: "otherMenu",
     icon: <GrainIcon />,
     children: [
-      { label: "Manage countries", key: "ManageCountries", icon: <FlagIcon /> },
+      { label: "Manage countries", key: "ManageCountriesComponent", icon: <FlagIcon /> },
       {
         label: "Manage states",
         key: "ManageStates",

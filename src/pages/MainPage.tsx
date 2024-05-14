@@ -16,9 +16,13 @@ import MyDrawer from "../components/MyDrawer";
 import HRAddUserComponent from "./HR/AddUser";
 import HomePage from "./HomePage";
 
+// All
+import ManageCountriesComponent from "../pages/Other/ManageCountries"; 
+
 const componentsOptions = {
   HRAddUserComponent,
   HomePage,
+  ManageCountriesComponent,
 };
 
 const MainPage = () => {
