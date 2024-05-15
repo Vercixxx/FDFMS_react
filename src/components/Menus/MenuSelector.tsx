@@ -162,7 +162,7 @@ const MyMenu: React.FC = () => {
           <img src={logo} alt="logo" className="w-32 rounded-full" />
         </div>
 
-        <div className=" justify-center items-center font-black ">
+        <div className=" justify-center items-center font-black text-white">
           <div className="font-bold text-sm ">
             Food Delivery Fleet Management System
           </div>
