@@ -12,10 +12,15 @@ import {
   TableRow,
   tableCellClasses,
   Button,
+  Box,
 } from "@mui/material";
 
+// Icons
+import DeleteIcon from "@mui/icons-material/Delete";
+import FlagIcon from "@mui/icons-material/Flag";
+
 const ManageCountriesComponent = () => {
-  const [countries, setCountries] = React.useState([]);
+  const [countries, setCountries] = React.useState<any[]>([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -33,35 +38,43 @@ const ManageCountriesComponent = () => {
     { field: "name", headerName: "Name", width: 5 },
   ];
 
-  const StyledTableCell = styled(TableCell)(({ theme }: { theme: any }) => ({
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundCloor: theme.palette.common.black,
-      color: theme.palette.common.white,
+      backgroundColor: theme.palette.action.hover,
+      // color: theme.palette.common.white,
+      fontSize: 18,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-      color: theme.palette.common.white,
+      fontSize: 18,
+      // color: theme.palette.common.white,
     },
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
-      backgroundColor: '#424242',
+      // backgroundColor: theme.palette.text.disabled,
     },
     // hide last border
     "&:last-child td, &:last-child th": {
-      backgroundColor: '#212121',
+      // backgroundColor: theme.palette.action.disabledBackground,
       border: 0,
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.action.hover,
     },
   }));
 
   // Table
 
   return (
-    <div>
-      Manage Countries
+    <div className="pe-4">
+      <div className="text-3xl mb-3">
+        <FlagIcon style={{ fontSize: "40px" }} />
+        Manage Countries
+      </div>
+
       <TableContainer>
-        <Table aria-label="customized table">
+        <Table aria-label="customized table" size="small">
           <TableHead>
             <TableRow>
               <StyledTableCell align="left">Id</StyledTableCell>
@@ -79,9 +92,29 @@ const ManageCountriesComponent = () => {
                 ))}
 
                 {/* Actions */}
-                <StyledTableCell sx={{}}>
-                  <Button variant="outlined">Edit</Button>
-                  <Button variant="outlined">Delete</Button>
+                <StyledTableCell align="center">
+                  <div className="flex justify-center">
+                    <Box mr={2}>
+                      <Button
+                        variant="outlined"
+                        color="success"
+                        size="large"
+                        startIcon={<DeleteIcon />}
+                        className="hover:scale-105"
+                      >
+                        Edit
+                      </Button>
+                    </Box>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="large"
+                      startIcon={<DeleteIcon />}
+                      className="hover:scale-105"
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </StyledTableCell>
                 {/* Actions */}
               </StyledTableRow>
