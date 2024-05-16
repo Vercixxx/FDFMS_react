@@ -32,7 +32,10 @@ function App() {
   }, []);
 
   // Theme
-  const [darkMode, setDarkMode] = React.useState(true);
+  const [darkMode, setDarkMode] = React.useState(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
 
   const theme = createTheme({
     palette: {
@@ -41,6 +44,7 @@ function App() {
   });
 
   const toggleTheme = () => {
+    localStorage.setItem("darkMode", String(!darkMode));
     setDarkMode(!darkMode);
   };
   // Theme
