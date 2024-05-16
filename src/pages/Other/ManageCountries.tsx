@@ -18,6 +18,8 @@ import {
   ToolbarItems,
   ExcelExport,
   PdfExport,
+  Sort,
+  SortSettingsModel,
 } from "@syncfusion/ej2-react-grids";
 
 // Theme
@@ -138,6 +140,9 @@ const ManageCountriesComponent = () => {
     "PdfExport",
   ];
 
+
+  // Syncfusion - Sorting
+  const sortOptions: SortSettingsModel = { columns: [{ field: "Name", direction: "Ascending" }] };
   // Syncfusion
 
   return (
@@ -159,12 +164,15 @@ const ManageCountriesComponent = () => {
         allowPdfExport={true}
         enableAdaptiveUI={true}
         rowRenderingMode="Vertical"
+        allowSorting={true}
+        sortSettings={sortOptions}
+        allowMultiSorting={true}
       >
         <ColumnsDirective>
           <ColumnDirective field="Id" textAlign="Left" allowEditing={false} />
           <ColumnDirective field="Name" textAlign="Left" />
         </ColumnsDirective>
-        <Inject services={[Page, Edit, Toolbar, ExcelExport, PdfExport]} />
+        <Inject services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort]} />
       </GridComponent>
     </div>
   );
