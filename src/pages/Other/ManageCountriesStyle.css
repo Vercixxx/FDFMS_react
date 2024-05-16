@@ -1,0 +1,91 @@
+.light-theme .e-grid {
+  transition: all 0.4s;
+  font-family: cursive;
+}
+.light-theme .e-grid .e-row:hover .e-rowcell {
+  transition: all 0.4s;
+  background-color: rgb(204, 229, 255) !important;
+}
+.light-theme .e-grid .e-rowcell.e-selectionbackground {
+  transition: all 0.4s;
+  background-color: rgb(230, 230, 250);
+  border: 1px solid red;
+}
+.light-theme .e-grid .e-row.e-altrow {
+  transition: all 0.4s;
+  background-color: rgb(150, 212, 212);
+}
+.light-theme .e-grid .e-row {
+  transition: all 0.4s;
+  /* background-color: rgb(180, 180, 180); */
+}
+
+.light-theme .e-grid .e-gridheader {
+  transition: all 0.4s;
+}
+
+/* Dark theme */
+.dark-theme .e-grid {
+  transition: all 0.4s;
+  font-family: cursive;
+  border: 0px;
+  color: #ffffff;
+}
+
+/* Hover row */
+.dark-theme .e-grid .e-row:hover .e-rowcell {
+  background-color: rgb(100, 100, 100) !important;
+}
+
+
+/* Alt row */
+.dark-theme .e-grid .e-row.e-altrow {
+  transition: all 0.4s;
+  /* background-color: rgb(150, 212, 212); */
+}
+
+/* Row */
+.dark-theme .e-grid .e-row {
+  transition: all 0.4s;
+  background-color: rgb(80, 80, 80);
+}
+
+/* Header */
+.dark-theme .e-grid .e-headercell {
+  transition: all 0.4s;
+  color: #ffffff;
+  background-color: #333333;
+}
+
+/* Toolbar */
+.dark-theme .e-grid .e-toolbar-items {
+    background-color: #333333;
+}
+/* Toolbar buttons */
+.dark-theme .e-grid .e-toolbar .e-btn {
+    background-color: #333333;
+    color: #ffffff !important;
+}
+
+/* Editing element */
+.dark-theme .e-grid .e-editedrow table, .e-grid .e-addedrow table {
+    background-color: #eb8962;
+}
+
+/* Footer */
+.dark-theme .e-grid .e-gridpager {
+  transition: all 0.4s;
+  color: #ffffff;
+  background-color: #333333;
+}
+
+.dark-theme .e-grid .e-gridpager .e-numericitem {
+    background-color: #333333;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.dark-theme .e-grid .e-gridpager .e-numericitem:hover {
+  background-color: #333333;
+  color: #007bff;
+}
