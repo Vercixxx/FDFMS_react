@@ -20,6 +20,8 @@ import {
   PdfExport,
   Sort,
   SortSettingsModel,
+  Filter,
+  FilterSettingsModel,
 } from "@syncfusion/ej2-react-grids";
 
 // Theme
@@ -143,6 +145,9 @@ const ManageCountriesComponent = () => {
 
   // Syncfusion - Sorting
   const sortOptions: SortSettingsModel = { columns: [{ field: "Name", direction: "Ascending" }] };
+
+  // Syncfusion - Filtering
+  const filterOptions: FilterSettingsModel = { ignoreAccent: true , type: "Excel"};
   // Syncfusion
 
   return (
@@ -162,17 +167,19 @@ const ManageCountriesComponent = () => {
         toolbarClick={toolbarClick}
         allowExcelExport={true}
         allowPdfExport={true}
-        enableAdaptiveUI={true}
-        rowRenderingMode="Vertical"
+        // enableAdaptiveUI={true}
+        // rowRenderingMode="Vertical"
         allowSorting={true}
         sortSettings={sortOptions}
         allowMultiSorting={true}
+        allowFiltering={true}
+        filterSettings={filterOptions}
       >
         <ColumnsDirective>
           <ColumnDirective field="Id" textAlign="Left" allowEditing={false} />
           <ColumnDirective field="Name" textAlign="Left" />
         </ColumnsDirective>
-        <Inject services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort]} />
+        <Inject services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort, Filter]} />
       </GridComponent>
     </div>
   );
