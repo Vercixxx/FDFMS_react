@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { GetCountries } from "../../scripts/countries";
+import { GetCountries, AddCountry } from "../../scripts/countries";
 
 import { Button, Box } from "@mui/material";
 
@@ -45,6 +45,16 @@ const ManageCountriesComponent = () => {
     fetchData();
   }, []);
 
+
+  function dataSourceHasChanged (state: any)  {
+    console.log(state.requestType);
+    console.log(state.data);
+    
+    
+    
+  }
+
+
   // Theme
   const { theme } = React.useContext(ThemeContext);
   const darkMode = theme.palette.mode === "dark" ? true : false;
@@ -65,6 +75,7 @@ const ManageCountriesComponent = () => {
   let grid: Grid | null;
   const toolbarClick = (args: any) => {
     if (grid) {
+
       if (args.item.id.includes("excelexport")) {
         grid.excelExport({
           fileName: "Countries.xlsx",
@@ -174,6 +185,7 @@ const ManageCountriesComponent = () => {
         allowMultiSorting={true}
         allowFiltering={true}
         filterSettings={filterOptions}
+        actionComplete={dataSourceHasChanged}
       >
         <ColumnsDirective>
           <ColumnDirective field="Id" textAlign="Left" allowEditing={false} />

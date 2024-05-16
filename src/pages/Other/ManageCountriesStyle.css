@@ -3,17 +3,16 @@
   font-family: cursive;
 }
 .light-theme .e-grid .e-row:hover .e-rowcell {
-  transition: all 0.4s;
-  background-color: rgb(204, 229, 255) !important;
+  cursor: pointer;
+  background-color: rgb(200, 200, 200) !important;
 }
 .light-theme .e-grid .e-rowcell.e-selectionbackground {
-  transition: all 0.4s;
-  background-color: rgb(230, 230, 250);
-  border: 1px solid red;
+
+  background-color: rgb(220, 220, 220);
 }
 .light-theme .e-grid .e-row.e-altrow {
   transition: all 0.4s;
-  background-color: rgb(150, 212, 212);
+  /* background-color: rgb(150, 212, 212); */
 }
 .light-theme .e-grid .e-row {
   transition: all 0.4s;
