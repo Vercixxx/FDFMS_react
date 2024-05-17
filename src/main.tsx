@@ -19,6 +19,10 @@ import { RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/index";
 
+// Snackbars
+import { SnackbarProvider } from "notistack";
+import { SnackbarProvider as CustomSnackbarProvider } from "./components/SnackbarContext";
+
 function App() {
   useEffect(() => {
     const token = JSON.parse(sessionStorage.getItem("token"));
@@ -55,7 +59,11 @@ function App() {
         <CssBaseline />
         <div className="theme-transition">
           <Provider store={store}>
-            <RouterProvider router={router}></RouterProvider>
+            <SnackbarProvider maxSnack={3}>
+              <CustomSnackbarProvider>
+                <RouterProvider router={router}></RouterProvider>
+              </CustomSnackbarProvider>
+            </SnackbarProvider>
           </Provider>
         </div>
       </ThemeProvider>

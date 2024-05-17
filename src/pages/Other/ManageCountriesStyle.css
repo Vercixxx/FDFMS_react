@@ -1,6 +1,7 @@
 .light-theme .e-grid {
   transition: all 0.4s;
   font-family: cursive;
+
 }
 .light-theme .e-grid .e-row:hover .e-rowcell {
   cursor: pointer;
