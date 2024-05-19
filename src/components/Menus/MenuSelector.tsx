@@ -57,8 +57,7 @@ const MyMenu: React.FC = () => {
         props: {},
       })
     );
-  }
-
+  };
 
   const handleClick = (item: MenuItem) => {
     const isRootItem = items.some((rootItem) => rootItem.key === item.key);
@@ -106,6 +105,14 @@ const MyMenu: React.FC = () => {
           );
           break;
         case "ManageCountriesComponent":
+          dispatch(
+            setCurrentMainComponent({
+              value: item.key,
+              props: {},
+            })
+          );
+          break;
+        case "ManageStatesComponent":
           dispatch(
             setCurrentMainComponent({
               value: item.key,

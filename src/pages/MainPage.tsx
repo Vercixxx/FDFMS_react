@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 
 import { Grid } from "@mui/material";
 
@@ -8,6 +9,7 @@ import { useSelector } from "react-redux";
 // Menu
 import MenuSelector from "../components/Menus/MenuSelector";
 
+
 // Components
 import MyAppBar from "../components/MyAppBar";
 
@@ -16,15 +18,17 @@ import HRAddUserComponent from "./HR/AddUser";
 import HomePage from "./HomePage";
 
 // All
-import ManageCountriesComponent from "../pages/Other/ManageCountries"; 
+import ManageCountriesComponent from "../pages/Other/ManageCountries";
+import ManageStatesComponent from "../pages/Other/ManageStates";
 
 const componentsOptions = {
   HRAddUserComponent,
   HomePage,
   ManageCountriesComponent,
+  ManageStatesComponent,
 };
 
-const MainPage = () => {
+const MainPage: React.FC = () => {
   const currentMainComponent = useSelector(
     (state: any) => state.currentMainComponent.value
   );
@@ -34,14 +38,20 @@ const MainPage = () => {
 
   const Component = componentsOptions[currentMainComponent];
 
+
+
   return (
-    <div className="" >
+    <div className="">
       <div className="h-screen ">
         <Grid container columnSpacing={3}>
-          <Grid item xs={2} className="h-screen" style={{ backgroundColor: "rgba(30,42,70,1)" }}>
+          <Grid
+            item
+            xs={2}
+            className="h-screen"
+            style={{ backgroundColor: "rgba(30,42,70,1)" }}
+          >
             <MenuSelector />
           </Grid>
-
 
           <Grid item xs={10}>
             <div className="mb-10">
@@ -56,6 +66,8 @@ const MainPage = () => {
           </Grid>
         </Grid>
       </div>
+
+
     </div>
   );
 };

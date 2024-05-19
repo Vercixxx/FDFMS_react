@@ -23,6 +23,9 @@ import store from "./store/index";
 import { SnackbarProvider } from "notistack";
 import { SnackbarProvider as CustomSnackbarProvider } from "./components/SnackbarContext";
 
+// Drawer
+import { DrawerProvider } from "./pages/Other/Drawer";
+
 function App() {
   useEffect(() => {
     const token = JSON.parse(sessionStorage.getItem("token"));
@@ -58,13 +61,15 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <div className="theme-transition">
-          <Provider store={store}>
-            <SnackbarProvider maxSnack={3}>
-              <CustomSnackbarProvider>
-                <RouterProvider router={router}></RouterProvider>
-              </CustomSnackbarProvider>
-            </SnackbarProvider>
-          </Provider>
+          <DrawerProvider>
+            <Provider store={store}>
+              <SnackbarProvider maxSnack={3}>
+                <CustomSnackbarProvider>
+                  <RouterProvider router={router}></RouterProvider>
+                </CustomSnackbarProvider>
+              </SnackbarProvider>
+            </Provider>
+          </DrawerProvider>
         </div>
       </ThemeProvider>
     </ThemeContext.Provider>

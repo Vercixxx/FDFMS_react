@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 
-import { GetCountries, AddCountry, DeleteCountry } from "../../scripts/countries";
+import { GetStates, AddState, DeleteState, IState } from "../../scripts/states";
 
 // Mui
 import Button from "@mui/material/Button";
@@ -32,7 +32,7 @@ import { ThemeContext } from "../../config/ThemeContext";
 import "./GridStyles.css";
 
 // Icons
-import FlagIcon from "@mui/icons-material/Flag";
+import LocationCityIcon from "@mui/icons-material/LocationCity";
 
 // Ant Design Icons
 import {
@@ -45,83 +45,90 @@ import {
 
 // Ant Design Modal
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Modal, Space } from "antd";
-
+import { Modal, Drawer } from "antd";
 
 // Snackbars
-import { useSnackbarContext } from './../../components/SnackbarContext';
+import { useSnackbarContext } from "./../../components/SnackbarContext";
 
+import { DrawerComponent, DrawerContext } from "./Drawer";
 
-const ManageCountriesComponent = () => {
-  const [countries, setCountries] = React.useState<any[]>([]);
+// Dialog State Template
+import DialogStateTemplate from "./DialogStateTemplate";
+
+const ManageStatesComponent: React.FC = () => {
+  const [states, setStates] = React.useState<any[]>([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
+
+  // Drawer
+  const { showDrawer, setDrawerContent } = useContext(DrawerContext);
 
 
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
-
 
   // Theme
   const { theme } = React.useContext(ThemeContext);
   const darkMode = theme.palette.mode === "dark" ? true : false;
   // Theme
 
-  // Fetch Data
+  // Fetch data
   const fetchData = async () => {
-    const data = await GetCountries();
-    setCountries(data);
+    const data = await GetStates();
+    setStates(data);
   };
-  
+
   React.useEffect(() => {
     fetchData();
   }, []);
 
-  const HandleCrud = async (state: any) =>{
+  //Syncfusion Grid
+  const HandleCrud = async (state: any) => {
     if (state.action === "add" && state.requestType === "save") {
-      const data = state.data; 
-      const response = await AddCountry(data.Name);
-      if(response){
+      const data = state.data;
+      const response = await AddState(data.Name);
+      if (response) {
         fetchData();
-        showSnackbar("Country Added", "success");
+        showSnackbar("State Added", "success");
       } else {
-        showSnackbar("Error Adding Country", "error")
+        showSnackbar("Error Adding State", "error");
       }
     } else if (state.action === "edit" && state.requestType === "save") {
-      console.log("Saving Edit");
     }
-  }
+  };
 
-  // Syncfusion
+  let grid = useRef<Grid | null>(null);
   const pageSettings = { pageSize: 15 };
+
+  // Syncfusion - Sorting
+  const sortOptions: SortSettingsModel = {
+    columns: [{ field: "Name", direction: "Ascending" }],
+  };
+
+  // Syncfusion - Filtering
+  const filterOptions: FilterSettingsModel = {
+    ignoreAccent: true,
+    type: "Excel",
+  };
+  // Syncfusion
+
+  // Syncfusion - Add
+  const dialogTemplate = (props: IState) => {
+    return <DialogStateTemplate {...props} />;
+  };
 
   // Syncfusion - Edit
   const editOptions: EditSettingsModel = {
-
+    allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
+    template: dialogTemplate,
     mode: "Dialog",
   };
-
-  // Syncfusion - Delete
-  const handleDelete = async (name: string) => {
-    const response = await DeleteCountry(name);
-    if(response){
-      fetchData();
-      showSnackbar("Country Deleted", "success");
-    } else {
-      showSnackbar("Error Deleting Country", "error")
-    }
-  };
-
-  // Syncfusion - Exporting
-  let grid = useRef<Grid | null>(null);
 
   // Syncfusion - Delete
   const { confirm } = Modal;
 
   const showDeleteConfirm = (item: any) => {
-    console.log(item);
-
     confirm({
       title: "Are you sure delete this item?",
       icon: <ExclamationCircleFilled />,
@@ -130,13 +137,24 @@ const ManageCountriesComponent = () => {
       okType: "danger",
       cancelText: "No",
       onOk() {
-        handleDelete(item?.name)
+        handleDelete(item?.id);
       },
       onCancel() {},
     });
   };
 
-  // Custom Toolbar
+  const handleDelete = async (id: number) => {
+    const response = await DeleteState(id);
+    if (response) {
+      fetchData();
+      showSnackbar("Country Deleted", "success");
+    } else {
+      showSnackbar("Error Deleting Country", "error");
+    }
+  };
+  // Syncfusion - Delete
+
+  // Syncfusion - Custom toolbar
   const toolbarTemplate = () => {
     return (
       <div className="flex justify-between mb-4">
@@ -149,15 +167,39 @@ const ManageCountriesComponent = () => {
               borderRadius: "12px",
             }}
             color="success"
-            onClick={() => grid.current?.addRecord()}
+            // onClick={() => grid.current?.addRecord()}
+            onClick={() => {
+              showDrawer();
+              console.log("asdsad");
+            }}
           >
             Add
           </Button>
 
           <Button
             variant="outlined"
+            startIcon={<EditFilled />}
+            disabled={selectedRows.length === 0}
+            className="hover:scale-105"
+            sx={{
+              borderRadius: "12px",
+            }}
+            color="success"
+            onClick={() => {
+              const selectedRowIndexes = grid.current?.getSelectedRowIndexes();
+              if (selectedRowIndexes && selectedRowIndexes.length > 0) {
+                grid.current?.startEdit();
+                grid.current?.editCell(selectedRowIndexes[0], "fieldName");
+              }
+            }}
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant="outlined"
             startIcon={<DeleteFilled />}
-            disabled={selectedRows.length === 0 }
+            disabled={selectedRows.length === 0}
             className="hover:scale-105"
             sx={{
               borderRadius: "12px",
@@ -185,7 +227,7 @@ const ManageCountriesComponent = () => {
             color="info"
             onClick={() =>
               grid.current?.excelExport({
-                fileName: "Countries.xlsx",
+                fileName: "States.xlsx",
                 header: {
                   headerRows: 1,
                   rows: [
@@ -194,7 +236,7 @@ const ManageCountriesComponent = () => {
                         {
                           colSpan: 2,
                           value:
-                            "Food Delivery Fleet Management System - Countries",
+                            "Food Delivery Fleet Management System - States",
                           style: {
                             hAlign: "Center",
                             bold: true,
@@ -234,15 +276,14 @@ const ManageCountriesComponent = () => {
             color="info"
             onClick={() =>
               grid.current?.pdfExport({
-                fileName: "Countries.pdf",
+                fileName: "States.pdf",
                 header: {
                   fromTop: 0,
                   height: 130,
                   contents: [
                     {
                       type: "Text",
-                      value:
-                        "Food Delivery Fleet Management System - Countries",
+                      value: "Food Delivery Fleet Management System - States",
                       position: { x: 0, y: 50 },
                       style: { textBrushColor: "#000000", fontSize: 14 },
                     },
@@ -270,35 +311,20 @@ const ManageCountriesComponent = () => {
     );
   };
 
-  // Syncfusion - Sorting
-  const sortOptions: SortSettingsModel = {
-    columns: [{ field: "Name", direction: "Ascending" }],
-  };
-
-  // Syncfusion - Filtering
-  const filterOptions: FilterSettingsModel = {
-    ignoreAccent: true,
-    type: "Excel",
-  };
-  // Syncfusion
-
   return (
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
       <div className="text-3xl mb-3">
-        <FlagIcon style={{ fontSize: "40px" }} />
-        Manage Countries
+        <LocationCityIcon style={{ fontSize: "40px" }} />
+        Manage States
       </div>
 
-    {toolbarTemplate()}
+      {toolbarTemplate()}
       <GridComponent
         ref={grid}
-        dataSource={countries}
+        dataSource={states}
         allowPaging={true}
         pageSettings={pageSettings}
         editSettings={editOptions}
-        modules={[Edit]}
-        // toolbarClick={toolbarClick}
-        // toolbarTemplate={toolbarTemplate}
         allowExcelExport={true}
         allowPdfExport={true}
         // enableAdaptiveUI={true}
@@ -317,15 +343,23 @@ const ManageCountriesComponent = () => {
         }}
       >
         <ColumnsDirective>
-          <ColumnDirective field="Id" textAlign="Left" allowEditing={false} />
+          <ColumnDirective
+            field="Id"
+            textAlign="Left"
+            allowEditing={false}
+            isPrimaryKey={true}
+          />
           <ColumnDirective field="Name" textAlign="Left" />
+          <ColumnDirective field="Country" textAlign="Left" />
         </ColumnsDirective>
         <Inject
           services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort, Filter]}
         />
       </GridComponent>
+
+
     </div>
   );
 };
 
-export default ManageCountriesComponent;
+export default ManageStatesComponent;

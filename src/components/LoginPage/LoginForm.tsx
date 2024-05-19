@@ -17,11 +17,17 @@ import { SignInUser } from "../../scripts/user";
 // Router
 import { useNavigate } from "react-router-dom";
 
+// Snackbars
+import { useSnackbarContext } from "./../../components/SnackbarContext";
+
 const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
+
+  // Snackbars
+  const { showSnackbar } = useSnackbarContext();
 
   const navigate = useNavigate();
 
@@ -29,14 +35,13 @@ const LoginForm = () => {
     event.preventDefault();
 
     setLoading(true);
-    console.log(username);
 
     const response = await SignInUser(username, password);
 
     if (response) {
       navigate("/dashboard");
     } else {
-      alert("Invalid credentials");
+      showSnackbar("Invalid credentials", "error");
     }
 
     setLoading(false);
@@ -78,7 +83,13 @@ const LoginForm = () => {
       </div>
 
       {/* Button */}
-      <Button type="text" loading={loading} onClick={Login} block className="font-black text-xl pb-8">
+      <Button
+        type="text"
+        loading={loading}
+        onClick={Login}
+        block
+        className="font-black text-xl pb-8"
+      >
         Sign in
       </Button>
       {/* <LoadingButton

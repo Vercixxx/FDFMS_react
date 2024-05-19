@@ -42,10 +42,14 @@ const HRMenuItems: MenuItem[] = [
     key: "otherMenu",
     icon: <GrainIcon />,
     children: [
-      { label: "Manage countries", key: "ManageCountriesComponent", icon: <FlagIcon /> },
+      {
+        label: "Manage countries",
+        key: "ManageCountriesComponent",
+        icon: <FlagIcon />,
+      },
       {
         label: "Manage states",
-        key: "ManageStates",
+        key: "ManageStatesComponent",
         icon: <LocationCityIcon />,
       },
     ],
@@ -56,6 +60,5 @@ const HRMenuItems: MenuItem[] = [
     icon: <EmailIcon />,
   },
 ];
-
 
 export default HRMenuItems;

@@ -128,6 +128,21 @@ const paths: Path[] = [
         icon: FlagIcon,
       },
     ],
+  },
+  {
+    title: "ManageStatesComponent",
+    component: "ManageStatesComponent",
+    icon: FlagIcon,
+    path: [
+      {
+        title: "Other",
+        icon: FlagIcon,
+      },
+      {
+        title: "Manage states",
+        icon: FlagIcon,
+      },
+    ],
   }
   // All
 ];
