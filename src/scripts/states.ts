@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export interface IState {
-    id: number;
+    id?: number;
     name: string;
     country: string;
 }

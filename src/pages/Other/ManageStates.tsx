@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import { GetStates, AddState, DeleteState, IState } from "../../scripts/states";
 
@@ -50,18 +50,29 @@ import { Modal, Drawer } from "antd";
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
 
-import { DrawerComponent, DrawerContext } from "./Drawer";
-
 // Dialog State Template
 import DialogStateTemplate from "./DialogStateTemplate";
+
+// ================== MyDrawer ==================
+import { useDispatch } from "react-redux";
+import { openDrawer } from "../../store/drawerSlice";
+
+// ================== MyDrawer ==================
 
 const ManageStatesComponent: React.FC = () => {
   const [states, setStates] = React.useState<any[]>([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
 
   // Drawer
-  const { showDrawer, setDrawerContent } = useContext(DrawerContext);
-
+  const dispatch = useDispatch();
+  const [refreshComponent, setRefreshComponent] = useState<boolean>(false);
+  // Update data after changes
+  useEffect(() => {
+    if (refreshComponent) {
+      fetchData();
+      setRefreshComponent(false);
+    }
+  }, [refreshComponent]);
 
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
@@ -74,7 +85,11 @@ const ManageStatesComponent: React.FC = () => {
   // Fetch data
   const fetchData = async () => {
     const data = await GetStates();
-    setStates(data);
+    if (!data) {
+      showSnackbar("Error Fetching States", "error");
+    } else {
+      setStates(data);
+    }
   };
 
   React.useEffect(() => {
@@ -169,8 +184,17 @@ const ManageStatesComponent: React.FC = () => {
             color="success"
             // onClick={() => grid.current?.addRecord()}
             onClick={() => {
-              showDrawer();
-              console.log("asdsad");
+              dispatch(
+                openDrawer({
+                  title: "My Title",
+                  component: (
+                    <DialogStateTemplate
+                      refreshComponent={refreshComponent}
+                      setRefreshComponent={setRefreshComponent}
+                    />
+                  ),
+                })
+              );
             }}
           >
             Add
@@ -356,8 +380,6 @@ const ManageStatesComponent: React.FC = () => {
           services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort, Filter]}
         />
       </GridComponent>
-
-
     </div>
   );
 };

@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import currentMainComponentReducer from './currentMainComponentSlice';
 
+// Drawer
+import drawerReducer from './drawerSlice';
+
 const store = configureStore({
   reducer: {
     currentMainComponent: currentMainComponentReducer,
+    drawer: drawerReducer,
   },
 });
 

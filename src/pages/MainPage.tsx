@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { Grid } from "@mui/material";
 
 // Redux
-import { useSelector } from "react-redux";
+import { useSelector, Provider } from "react-redux";
 
 // Menu
 import MenuSelector from "../components/Menus/MenuSelector";
@@ -12,6 +12,10 @@ import MenuSelector from "../components/Menus/MenuSelector";
 
 // Components
 import MyAppBar from "../components/MyAppBar";
+
+// Drawer
+import MyDrawer from "../pages/Other/MyDrawer";
+
 
 // Pages
 import HRAddUserComponent from "./HR/AddUser";
@@ -67,7 +71,7 @@ const MainPage: React.FC = () => {
         </Grid>
       </div>
 
-
+      <MyDrawer />
     </div>
   );
 };

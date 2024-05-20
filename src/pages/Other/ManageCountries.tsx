@@ -69,7 +69,11 @@ const ManageCountriesComponent = () => {
   // Fetch Data
   const fetchData = async () => {
     const data = await GetCountries();
-    setCountries(data);
+    if(!data) {
+      showSnackbar("Error Fetching Countries", "error");
+    } else {
+      setCountries(data);
+    }
   };
   
   React.useEffect(() => {
