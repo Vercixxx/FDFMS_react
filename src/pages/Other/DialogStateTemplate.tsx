@@ -10,6 +10,9 @@ import { Controller } from "react-hook-form";
 
 import { GetStates, AddState, DeleteState, IState } from "../../scripts/states";
 
+// Snackbars
+import { useSnackbarContext } from "./../../components/SnackbarContext";
+
 // Mui
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -41,6 +44,9 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
   }, []);
   // Get Countries
 
+  // Snackbars
+  const { showSnackbar } = useSnackbarContext();
+
   // Drawer
   const dispatch = useDispatch();
 
@@ -59,10 +65,18 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
       dispatch(closeDrawer());
       setRefreshComponent(true);
     } catch (error) {
-      console.error(error);
+      showSnackbar("Error while adding, please try again", "error");
       setLoading(false);
     }
   };
+
+
+  // Check if data is passed
+  React.useEffect(() => {
+    if (data) {
+      console.log("Data: ", data);
+    }
+  }, [data]);
 
   const {
     register,

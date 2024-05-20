@@ -14,9 +14,8 @@ import {
   GridComponent,
   Inject,
   Page,
-  Edit,
   Toolbar,
-  ToolbarItems,
+  ContextMenu,
   ExcelExport,
   PdfExport,
   Sort,
@@ -96,21 +95,6 @@ const ManageStatesComponent: React.FC = () => {
     fetchData();
   }, []);
 
-  //Syncfusion Grid
-  const HandleCrud = async (state: any) => {
-    if (state.action === "add" && state.requestType === "save") {
-      const data = state.data;
-      const response = await AddState(data.Name);
-      if (response) {
-        fetchData();
-        showSnackbar("State Added", "success");
-      } else {
-        showSnackbar("Error Adding State", "error");
-      }
-    } else if (state.action === "edit" && state.requestType === "save") {
-    }
-  };
-
   let grid = useRef<Grid | null>(null);
   const pageSettings = { pageSize: 15 };
 
@@ -133,11 +117,7 @@ const ManageStatesComponent: React.FC = () => {
 
   // Syncfusion - Edit
   const editOptions: EditSettingsModel = {
-    allowEditing: true,
-    allowAdding: true,
     allowDeleting: true,
-    template: dialogTemplate,
-    mode: "Dialog",
   };
 
   // Syncfusion - Delete
@@ -212,8 +192,9 @@ const ManageStatesComponent: React.FC = () => {
             onClick={() => {
               const selectedRowIndexes = grid.current?.getSelectedRowIndexes();
               if (selectedRowIndexes && selectedRowIndexes.length > 0) {
-                grid.current?.startEdit();
-                grid.current?.editCell(selectedRowIndexes[0], "fieldName");
+                // grid.current?.startEdit();
+                // grid.current?.editCell(selectedRowIndexes[0], "fieldName");
+                console.log(selectedRowIndexes[0]);
               }
             }}
           >
@@ -335,6 +316,33 @@ const ManageStatesComponent: React.FC = () => {
     );
   };
 
+  // Context Menu
+  const contextMenuItems = [
+    { text: "Copy row", target: ".e-content", id: "CopyRow" },
+    { text: "Edit row", target: ".e-content", id: "EditRow" },
+    { text: "Delete row", target: ".e-content", id: "DeleteRow" },
+  ];
+  const contextMenuClick = (args) => {
+    if (args.item.id === "CopyRow") {
+      const selectedRecords = grid.current?.getSelectedRecords();
+      if (selectedRecords && selectedRecords.length > 0) {
+        const record = selectedRecords[0];
+        const formattedRecord = Object.entries(record)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(", ");
+
+        navigator.clipboard.writeText(formattedRecord);
+      }
+    } else if (grid && args.item.id === "EditRow") {
+      console.log("Edit Row");
+    } else if (grid && args.item.id === "DeleteRow") {
+      const selectedRecords = grid.current?.getSelectedRecords();
+      if (selectedRecords && selectedRecords.length > 0) {
+        showDeleteConfirm(selectedRecords[0]);
+      }
+    }
+  };
+
   return (
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
       <div className="text-3xl mb-3">
@@ -358,7 +366,8 @@ const ManageStatesComponent: React.FC = () => {
         allowMultiSorting={true}
         allowFiltering={true}
         filterSettings={filterOptions}
-        actionComplete={HandleCrud}
+        contextMenuItems={contextMenuItems}
+        contextMenuClick={contextMenuClick}
         rowSelected={(args) => {
           setSelectedRows(grid.current?.getSelectedRecords());
         }}
@@ -377,7 +386,15 @@ const ManageStatesComponent: React.FC = () => {
           <ColumnDirective field="Country" textAlign="Left" />
         </ColumnsDirective>
         <Inject
-          services={[Page, Edit, Toolbar, ExcelExport, PdfExport, Sort, Filter]}
+          services={[
+            Page,
+            Toolbar,
+            ExcelExport,
+            PdfExport,
+            Sort,
+            Filter,
+            ContextMenu,
+          ]}
         />
       </GridComponent>
     </div>
