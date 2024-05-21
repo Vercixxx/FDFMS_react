@@ -142,9 +142,9 @@ const ManageStatesComponent: React.FC = () => {
     const response = await DeleteState(id);
     if (response) {
       fetchData();
-      showSnackbar("Country Deleted", "success");
+      showSnackbar("State Deleted", "success");
     } else {
-      showSnackbar("Error Deleting Country", "error");
+      showSnackbar("Error Deleting State", "error");
     }
   };
   // Syncfusion - Delete

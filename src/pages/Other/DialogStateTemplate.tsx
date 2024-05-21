@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useDispatch } from "react-redux";
-import { closeDrawer } from "../../store/drawerSlice";
+import { closeDrawer, startLoading, stopLoading } from "../../store/drawerSlice";
 
 import { GetCountries } from "../../scripts/countries";
 
@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
 import { AddState, IState, EditState } from "../../scripts/states";
+
+
 
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
@@ -56,11 +58,13 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
   const addNewState = async (data: any) => {
     try {
       setLoading(true);
+      dispatch(startLoading());
       const transformedData = {
         country: data.selectedCountry,
         name: data.stateName,
       };
       await AddState(transformedData);
+      dispatch(stopLoading());
       setLoading(false);
       dispatch(closeDrawer());
       setRefreshComponent(true);

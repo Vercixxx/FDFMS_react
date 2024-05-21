@@ -4,7 +4,7 @@ import "./index.css";
 
 // Theme
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { ThemeContext } from "./config/ThemeContext";
+import { ThemeContext, darkTheme, lightTheme } from "./config/ThemeContext";
 import CssBaseline from "@mui/material/CssBaseline";
 
 // Axios
@@ -41,11 +41,7 @@ function App() {
     return savedMode ? JSON.parse(savedMode) : false;
   });
 
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? "dark" : "light",
-    },
-  });
+  const theme = darkMode ? darkTheme : lightTheme;
 
   const toggleTheme = () => {
     localStorage.setItem("darkMode", String(!darkMode));
@@ -60,7 +56,7 @@ function App() {
         <div className="theme-transition">
           <Provider store={store}>
             <SnackbarProvider maxSnack={3}>
-              <CustomSnackbarProvider>
+              <CustomSnackbarProvider >
                 <RouterProvider router={router}></RouterProvider>
               </CustomSnackbarProvider>
             </SnackbarProvider>
