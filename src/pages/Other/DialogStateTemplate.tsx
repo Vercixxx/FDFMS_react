@@ -8,7 +8,7 @@ import { GetCountries } from "../../scripts/countries";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
-import { GetStates, AddState, DeleteState, IState } from "../../scripts/states";
+import { AddState, IState, EditState } from "../../scripts/states";
 
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
@@ -64,24 +64,38 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
       setLoading(false);
       dispatch(closeDrawer());
       setRefreshComponent(true);
+      showSnackbar("State added successfully", "success");
     } catch (error) {
       showSnackbar("Error while adding, please try again", "error");
       setLoading(false);
     }
   };
 
+  // Edit state
+  const editState = async (oldData: IState, newData: any) => {
+    try {
+      setLoading(true);
+      const transformedData = {
+        country: newData.selectedCountry,
+        name: newData.stateName,
+      };
 
-  // Check if data is passed
-  React.useEffect(() => {
-    if (data) {
-      console.log("Data: ", data);
+      await EditState(oldData.id || 0, transformedData);
+      setLoading(false);
+      dispatch(closeDrawer());
+      setRefreshComponent(true);
+      showSnackbar("State updated successfully", "success");
+    } catch (error) {
+      showSnackbar("Error while updating, please try again", "error");
+      setLoading(false);
     }
-  }, [data]);
+  };
 
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -90,11 +104,28 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
     },
   });
 
+  // Check if data is passed
+  const [stateData, setStateData] = React.useState(null);
+
+  React.useEffect(() => {
+    if (data) {
+      setStateData(data);
+      setValue("selectedCountry", data.country);
+      setValue("stateName", data.name);
+    } else {
+      setStateData(null);
+    }
+  }, [data]);
+
   return (
     <div>
       <form
         onSubmit={handleSubmit((data) => {
-          addNewState(data);
+          if (stateData) {
+            editState(stateData, data);
+          } else {
+            addNewState(data);
+          }
         })}
       >
         {/* Country */}
@@ -145,7 +176,7 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
             type="submit"
             sx={{ width: "50%" }}
           >
-            Add state
+            {stateData ? "Update" : "Save"}
           </LoadingButton>
         </div>
       </form>

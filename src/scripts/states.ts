@@ -44,3 +44,15 @@ export const DeleteState = async (id: number) => {
 
 
 
+export const EditState = async (id: number, data: IState) => {
+    try {
+        await axios.put(`api/states/edit/${id}/`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return true;
+    } catch (error) {
+        return false;
+    }
+}

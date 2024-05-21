@@ -162,11 +162,10 @@ const ManageStatesComponent: React.FC = () => {
               borderRadius: "12px",
             }}
             color="success"
-            // onClick={() => grid.current?.addRecord()}
             onClick={() => {
               dispatch(
                 openDrawer({
-                  title: "My Title",
+                  title: "Add State",
                   component: (
                     <DialogStateTemplate
                       refreshComponent={refreshComponent}
@@ -190,11 +189,20 @@ const ManageStatesComponent: React.FC = () => {
             }}
             color="success"
             onClick={() => {
-              const selectedRowIndexes = grid.current?.getSelectedRowIndexes();
-              if (selectedRowIndexes && selectedRowIndexes.length > 0) {
-                // grid.current?.startEdit();
-                // grid.current?.editCell(selectedRowIndexes[0], "fieldName");
-                console.log(selectedRowIndexes[0]);
+              const selectedRecord = grid.current?.getSelectedRecords();
+              if (selectedRecord && selectedRecord.length == 1) {
+                dispatch(
+                  openDrawer({
+                    title: "Edit State",
+                    component: (
+                      <DialogStateTemplate
+                        refreshComponent={refreshComponent}
+                        setRefreshComponent={setRefreshComponent}
+                        data={selectedRecord[0]}
+                      />
+                    ),
+                  })
+                );
               }
             }}
           >
@@ -334,7 +342,21 @@ const ManageStatesComponent: React.FC = () => {
         navigator.clipboard.writeText(formattedRecord);
       }
     } else if (grid && args.item.id === "EditRow") {
-      console.log("Edit Row");
+      const selectedRecord = grid.current?.getSelectedRecords();
+      if (selectedRecord && selectedRecord.length == 1) {
+        dispatch(
+          openDrawer({
+            title: "Edit State",
+            component: (
+              <DialogStateTemplate
+                refreshComponent={refreshComponent}
+                setRefreshComponent={setRefreshComponent}
+                data={selectedRecord[0]}
+              />
+            ),
+          })
+        );
+      }
     } else if (grid && args.item.id === "DeleteRow") {
       const selectedRecords = grid.current?.getSelectedRecords();
       if (selectedRecords && selectedRecords.length > 0) {
