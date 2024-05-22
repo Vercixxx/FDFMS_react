@@ -1,27 +1,56 @@
 .light-theme .e-grid {
   transition: all 0.4s;
   font-family: cursive;
-
+  border: 0px;
 }
 .light-theme .e-grid .e-row:hover .e-rowcell {
   cursor: pointer;
-  background-color: rgb(200, 200, 200) !important;
+  background-color: rgba(250, 100, 100, 0.7) !important;
 }
 .light-theme .e-grid .e-rowcell.e-selectionbackground {
-
-  background-color: rgb(220, 220, 220);
+  background-color: rgba(250, 100, 100, 0.7);
 }
 .light-theme .e-grid .e-row.e-altrow {
   transition: all 0.4s;
-  /* background-color: rgb(150, 212, 212); */
+  background-color: rgb(240, 240, 240);
 }
 .light-theme .e-grid .e-row {
   transition: all 0.4s;
   /* background-color: rgb(180, 180, 180); */
 }
 
-.light-theme .e-grid .e-gridheader {
+/* Row - text color */
+.light-theme .e-grid th.e-headercell[aria-sort="ascending"] .e-headertext,
+.light-theme .e-grid th.e-headercell[aria-sort="descending"] .e-headertext,
+.light-theme .e-grid th.e-headercell[aria-sort="ascending"] .e-sortfilterdiv,
+.light-theme .e-grid th.e-headercell[aria-sort="descending"] .e-sortfilterdiv {
   transition: all 0.4s;
+  color: #000;
+}
+
+.light-theme .e-pager .e-prevpagedisabled,
+.light-theme .e-pager .e-prevpage,
+.light-theme .e-pager .e-nextpage,
+.light-theme .e-pager .e-nextpagedisabled,
+.light-theme .e-pager .e-lastpagedisabled,
+.light-theme .e-pager .e-lastpage,
+.light-theme .e-pager .e-firstpage,
+.light-theme .e-pager .e-firstpagedisabled {
+  transition: all 0.4s;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+}
+
+/* Header - filter icon */
+.light-theme
+  .e-grid
+  .e-gridheader
+  .e-icons:not(.e-icon-hide):not(.e-check):not(.e-stop):not(
+    .e-icon-reorderuparrow
+  ):not(.e-icon-reorderdownarrow) {
+  transition: all 0.4s;
+  color: #000;
 }
 
 /* Dark theme */
@@ -29,47 +58,79 @@
   transition: all 0.4s;
   font-family: cursive;
   border: 0px;
-  color: #ffffff;
+  color: #fff;
 }
 
 /* Hover row */
 .dark-theme .e-grid .e-row:hover .e-rowcell {
-  background-color: rgb(100, 100, 100) !important;
+  color: #fff;
+  background-color: rgba(250, 100, 100, 1) !important;
+  cursor: pointer;
 }
 
+.dark-theme .e-grid .e-rowcell.e-selectionbackground {
+  background-color: rgba(250, 100, 100, 0.7);
+}
 
 /* Alt row */
 .dark-theme .e-grid .e-row.e-altrow {
   transition: all 0.4s;
-  /* background-color: rgb(150, 212, 212); */
+  color: #fff;
+  background-color: #444;
 }
 
 /* Row */
 .dark-theme .e-grid .e-row {
   transition: all 0.4s;
-  background-color: rgb(80, 80, 80);
+  color: #fff;
+  background-color: #333;
+}
+
+/* Row text color */
+.dark-theme .e-grid .e-rowcell:not(.e-editedbatchcell):not(.e-updatedtd),
+.dark-theme
+  .e-grid
+  .e-detailrowcollapse:not(.e-editedbatchcell):not(.e-updatedtd),
+.dark-theme
+  .e-grid
+  .e-detailrowexpand:not(.e-editedbatchcell):not(.e-updatedtd),
+.dark-theme
+  .e-grid
+  .e-gridcontent
+  .e-rowdragdrop:not(.e-editedbatchcell):not(.e-updatedtd),
+.dark-theme
+  .e-grid
+  .e-gridheader
+  .e-rowdragdrop:not(.e-editedbatchcell):not(.e-updatedtd),
+.dark-theme .e-grid .e-emptyrow:not(.e-editedbatchcell):not(.e-updatedtd) {
+  color: #fff;
 }
 
 /* Header */
 .dark-theme .e-grid .e-headercell {
   transition: all 0.4s;
   color: #ffffff;
-  background-color: #333333;
+  background-color: #666;
 }
 
-/* Toolbar */
-.dark-theme .e-grid .e-toolbar-items {
-    background-color: #333333;
-}
-/* Toolbar buttons */
-.dark-theme .e-grid .e-toolbar .e-btn {
-    background-color: #333333;
-    color: #ffffff !important;
+/* Header - sorting text */
+.dark-theme .e-grid th.e-headercell[aria-sort="ascending"] .e-headertext,
+.dark-theme .e-grid th.e-headercell[aria-sort="descending"] .e-headertext,
+.dark-theme .e-grid th.e-headercell[aria-sort="ascending"] .e-sortfilterdiv,
+.dark-theme .e-grid th.e-headercell[aria-sort="descending"] .e-sortfilterdiv {
+  transition: all 0.4s;
+  color: #fff;
 }
 
-/* Editing element */
-.dark-theme .e-grid .e-editedrow table, .e-grid .e-addedrow table {
-    background-color: #eb8962;
+/* Header - filter icon */
+.dark-theme
+  .e-grid
+  .e-gridheader
+  .e-icons:not(.e-icon-hide):not(.e-check):not(.e-stop):not(
+    .e-icon-reorderuparrow
+  ):not(.e-icon-reorderdownarrow) {
+  transition: all 0.4s;
+  color: #fff;
 }
 
 /* Footer */
@@ -79,13 +140,35 @@
   background-color: #333333;
 }
 
-.dark-theme .e-grid .e-gridpager .e-numericitem {
-    background-color: #333333;
+.dark-theme .e-grid .e-gridpager .e-numericitem .e-currentitem {
+  transition: all 0.4s;
+  background-color: #333333;
   color: #ffffff;
   cursor: pointer;
 }
 
 .dark-theme .e-grid .e-gridpager .e-numericitem:hover {
+  transition: all 0.4s;
+  background-color: #999;
+  color: #fff;
+}
+
+.dark-theme .e-pager .e-prevpagedisabled,
+.dark-theme .e-pager .e-prevpage,
+.dark-theme .e-pager .e-nextpage,
+.dark-theme .e-pager .e-nextpagedisabled,
+.dark-theme .e-pager .e-lastpagedisabled,
+.dark-theme .e-pager .e-lastpage,
+.dark-theme .e-pager .e-firstpage,
+.dark-theme .e-pager .e-firstpagedisabled {
+  transition: all 0.4s;
   background-color: #333333;
-  color: #007bff;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.dark-theme .e-pager .e-pagercontainer {
+  transition: all 0.4s;
+  background-color: #333333;
+  color: #ffffff;
 }
