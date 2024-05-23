@@ -23,7 +23,8 @@ import { useDispatch } from "react-redux";
 import { setCurrentMainComponent } from "../../store/currentMainComponentSlice";
 
 // Import menus
-import HRMenuItems from "./HRMenu";
+import { useHRMenuItems } from '../Menus/HRMenu';
+
 
 type MenuItem = Required<typeof List>["items"][number];
 
@@ -35,7 +36,7 @@ const MyMenu: React.FC = () => {
 
     switch (userRole) {
       case "HR":
-        return HRMenuItems;
+        return useHRMenuItems();
       default:
         return [];
     }

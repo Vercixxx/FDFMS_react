@@ -58,9 +58,15 @@ import { openDrawer } from "../../store/drawerSlice";
 
 // ================== MyDrawer ==================
 
+// i18n
+import { useTranslation } from "react-i18next";
+
 const ManageStatesComponent: React.FC = () => {
   const [states, setStates] = React.useState<any[]>([]);
   const [selectedRows, setSelectedRows] = React.useState([]);
+
+  // i18n
+  const { t } = useTranslation();
 
   // Drawer
   const dispatch = useDispatch();
@@ -110,16 +116,6 @@ const ManageStatesComponent: React.FC = () => {
   };
   // Syncfusion
 
-  // Syncfusion - Add
-  const dialogTemplate = (props: IState) => {
-    return <DialogStateTemplate {...props} />;
-  };
-
-  // Syncfusion - Edit
-  const editOptions: EditSettingsModel = {
-    allowDeleting: true,
-  };
-
   // Syncfusion - Delete
   const { confirm } = Modal;
 
@@ -142,9 +138,9 @@ const ManageStatesComponent: React.FC = () => {
     const response = await DeleteState(id);
     if (response) {
       fetchData();
-      showSnackbar("State Deleted", "success");
+      showSnackbar(t("Successfully deleted"), "success");
     } else {
-      showSnackbar("Error Deleting State", "error");
+      showSnackbar(t("Error while deleting, please try again"), "error");
     }
   };
   // Syncfusion - Delete
@@ -176,7 +172,7 @@ const ManageStatesComponent: React.FC = () => {
               );
             }}
           >
-            Add
+            {t("Add")}
           </Button>
 
           <Button
@@ -206,7 +202,7 @@ const ManageStatesComponent: React.FC = () => {
               }
             }}
           >
-            Edit
+            {t("Edit")}
           </Button>
 
           <Button
@@ -225,7 +221,7 @@ const ManageStatesComponent: React.FC = () => {
               }
             }}
           >
-            Delete
+            {t("Delete")}
           </Button>
         </div>
 
@@ -277,7 +273,7 @@ const ManageStatesComponent: React.FC = () => {
               })
             }
           >
-            Export to Excel
+            {t("Export to Excel")}
           </Button>
           <Button
             variant="outlined"
@@ -317,7 +313,7 @@ const ManageStatesComponent: React.FC = () => {
               })
             }
           >
-            Export to PDF
+            {t("Export to PDF")}
           </Button>
         </div>
       </div>
@@ -326,9 +322,9 @@ const ManageStatesComponent: React.FC = () => {
 
   // Context Menu
   const contextMenuItems = [
-    { text: "Copy row", target: ".e-content", id: "CopyRow" },
-    { text: "Edit row", target: ".e-content", id: "EditRow" },
-    { text: "Delete row", target: ".e-content", id: "DeleteRow" },
+    { text: t("Copy"), target: ".e-content", id: "CopyRow" },
+    { text: t("Edit"), target: ".e-content", id: "EditRow" },
+    { text: t("Delete"), target: ".e-content", id: "DeleteRow" },
   ];
   const contextMenuClick = (args) => {
     if (args.item.id === "CopyRow") {
@@ -369,7 +365,7 @@ const ManageStatesComponent: React.FC = () => {
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
       <div className="text-3xl mb-3">
         <LocationCityIcon style={{ fontSize: "40px" }} />
-        Manage States
+        {t("Manage States")}
       </div>
 
       {toolbarTemplate()}
@@ -378,7 +374,6 @@ const ManageStatesComponent: React.FC = () => {
         dataSource={states}
         allowPaging={true}
         pageSettings={pageSettings}
-        editSettings={editOptions}
         allowExcelExport={true}
         allowPdfExport={true}
         // enableAdaptiveUI={true}
@@ -404,8 +399,16 @@ const ManageStatesComponent: React.FC = () => {
             allowEditing={false}
             isPrimaryKey={true}
           />
-          <ColumnDirective field="Name" textAlign="Left" />
-          <ColumnDirective field="Country" textAlign="Left" />
+          <ColumnDirective
+            field="Name"
+            headerText={t("Name")}
+            textAlign="Left"
+          />
+          <ColumnDirective
+            field="Country"
+            headerText={t("Country")}
+            textAlign="Left"
+          />
         </ColumnsDirective>
         <Inject
           services={[

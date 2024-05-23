@@ -23,6 +23,10 @@ import store from "./store/index";
 import { SnackbarProvider } from "notistack";
 import { SnackbarProvider as CustomSnackbarProvider } from "./components/SnackbarContext";
 
+// i18n
+
+import './i18n';
+
 function App() {
   useEffect(() => {
     const token = JSON.parse(sessionStorage.getItem("token"));

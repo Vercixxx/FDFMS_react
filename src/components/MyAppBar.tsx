@@ -15,6 +15,9 @@ import MyBreadcrumb from "./MyBreadcrumb";
 // Logout modal
 import LogOutModal from "./LogOutModal";
 
+// i18n
+import LanguageSelector from "./LanguageSelector";
+
 const MyAppBar = () => {
   const [openLogOutModal, setOpenLogOutModal] = React.useState(false);
 
@@ -36,8 +39,16 @@ const MyAppBar = () => {
 
       {/* 3 */}
       <div className="col-span-2 flex justify-end items-center pe-4">
+        {/* i18n */}
+        <LanguageSelector />
+        {/* i18n */}
+
         {/* Theme */}
-        <IconButton color="inherit" className="hover:scale-110" onClick={toggleTheme}>
+        <IconButton
+          color="inherit"
+          className="hover:scale-110"
+          onClick={toggleTheme}
+        >
           <Tooltip title="Change theme" arrow TransitionComponent={Zoom}>
             <Icon path={mdiThemeLightDark} size={1.3} />
           </Tooltip>
