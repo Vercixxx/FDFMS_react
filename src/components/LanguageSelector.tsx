@@ -76,7 +76,7 @@ const LanguageSelector = () => {
         >
           <Typography.Link>
             <Space>
-              <span className={darkMode ? 'text-white rounded-3xl px-3 py-3 hover:bg-slate-700':'text-black rounded-3xl px-3 py-3 hover:bg-slate-200'}>
+              <span className={darkMode ? 'text-white rounded-full px-3 py-3 ':'text-black rounded-3xl px-3 py-3 '}>
               {language === "en" ? "EN" : "PL"}
               </span>
               {/* FLAG??? */}

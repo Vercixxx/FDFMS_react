@@ -40,7 +40,7 @@ const MyBreadcrumb: React.FC = () => {
     },
     // HR
     {
-      title: t("HRAddUserComponent"),
+      title: "HRAddUserComponent",
       component: "HRAddUserComponent",
       icon: GroupIcon,
       path: [
@@ -60,7 +60,7 @@ const MyBreadcrumb: React.FC = () => {
     },
     // All
     {
-      title: t("ManageCountriesComponent"),
+      title: "ManageCountriesComponent",
       component: "ManageCountriesComponent",
       icon: FlagIcon,
       path: [
@@ -75,7 +75,7 @@ const MyBreadcrumb: React.FC = () => {
       ],
     },
     {
-      title: t("ManageStatesComponent"),
+      title: "ManageStatesComponent",
       component: "ManageStatesComponent",
       icon: FlagIcon,
       path: [

@@ -20,11 +20,17 @@ import { useNavigate } from "react-router-dom";
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
 
+// i18n
+import { useTranslation } from "react-i18next";
+
+
 const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
+
+  const { t } = useTranslation();
 
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
@@ -41,7 +47,7 @@ const LoginForm = () => {
     if (response) {
       navigate("/dashboard");
     } else {
-      showSnackbar("Invalid credentials", "error");
+      showSnackbar(t("Invalid credentials"), "error");
     }
 
     setLoading(false);
@@ -62,7 +68,7 @@ const LoginForm = () => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            placeholder={t("Username")}
             disabled={loading}
             prefix={<UserOutlined />}
           />
@@ -74,7 +80,7 @@ const LoginForm = () => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder={t("Password")}
           disabled={loading}
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -90,7 +96,7 @@ const LoginForm = () => {
         block
         className="font-black text-xl pb-8"
       >
-        Sign in
+        {t("Sign in")}
       </Button>
       {/* <LoadingButton
         size="large"

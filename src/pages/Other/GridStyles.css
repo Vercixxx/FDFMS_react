@@ -185,3 +185,11 @@
   background-color: #333333;
   color: #ffffff;
 }
+
+
+
+.e-dialog .e-dlg-header .e-dlg-header-content .e-flat{
+  color: green;
+  font-size: 20px;
+  font-weight: normal;
+}

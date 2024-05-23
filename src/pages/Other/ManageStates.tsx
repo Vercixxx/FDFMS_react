@@ -24,6 +24,9 @@ import {
   FilterSettingsModel,
 } from "@syncfusion/ej2-react-grids";
 
+// Syncfusion - Modal
+import { DialogComponent } from "@syncfusion/ej2-react-popups";
+
 // Theme
 import { ThemeContext } from "../../config/ThemeContext";
 
@@ -44,7 +47,7 @@ import {
 
 // Ant Design Modal
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Modal, Drawer } from "antd";
+import { Modal } from "antd";
 
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
@@ -91,7 +94,7 @@ const ManageStatesComponent: React.FC = () => {
   const fetchData = async () => {
     const data = await GetStates();
     if (!data) {
-      showSnackbar("Error Fetching States", "error");
+      showSnackbar(t("Error while fetching data, please try again"), "error");
     } else {
       setStates(data);
     }
@@ -119,19 +122,56 @@ const ManageStatesComponent: React.FC = () => {
   // Syncfusion - Delete
   const { confirm } = Modal;
 
-  const showDeleteConfirm = (item: any) => {
-    confirm({
-      title: "Are you sure delete this item?",
-      icon: <ExclamationCircleFilled />,
-      content: `${item?.name || "The item"} will be deleted.`,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        handleDelete(item?.id);
+  const dialogInstance = useRef(null);
+  const settings = { effect: "Zoom", duration: 200, delay: 0 };
+  const buttons = [
+    {
+      buttonModel: {
+        content: "OK",
+        cssClass: "e-flat",
+        isPrimary: true,
       },
-      onCancel() {},
-    });
+      click: () => {
+        if (dialogInstance.current) {
+          dialogInstance.current.hide();
+        }
+      },
+    },
+    {
+      buttonModel: {
+        content: "Cancel",
+        cssClass: "e-flat",
+      },
+      click: () => {
+        if (dialogInstance.current) {
+          dialogInstance.current.hide();
+        }
+      },
+    },
+  ];
+
+  const handleClick = () => {
+    if (dialogInstance.current) {
+      dialogInstance.current.show();
+    }
+  };
+
+  const showDeleteConfirm = (item: any) => {
+    // confirm({
+    //   title: t("Are you sure delete this item?"),
+    //   icon: <ExclamationCircleFilled />,
+    //   content: `${item?.name || ""} ${t("will be deleted")}.`,
+    //   okText: t("Yes"),
+    //   okType: "danger",
+    //   cancelText: t("No"),
+    //   onOk() {
+    //     handleDelete(item?.id);
+    //   },
+    //   onCancel() {},
+
+    //   centered: true,
+    // });
+    handleClick();
   };
 
   const handleDelete = async (id: number) => {
@@ -422,6 +462,20 @@ const ManageStatesComponent: React.FC = () => {
           ]}
         />
       </GridComponent>
+
+      <div id="dialog-target">
+        <DialogComponent
+          width="250px"
+          animationSettings={settings}
+          target="#dialog-target"
+          header="Dialog"
+          showCloseIcon={true}
+          buttons={buttons}
+          ref={dialogInstance}
+        >
+          Dialog enabled with Zoom effect
+        </DialogComponent>
+      </div>
     </div>
   );
 };

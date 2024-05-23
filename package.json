@@ -23,6 +23,7 @@
     "@syncfusion/ej2-react-dropdowns": "^25.2.4",
     "@syncfusion/ej2-react-grids": "^25.2.3",
     "@syncfusion/ej2-react-inputs": "^25.2.3",
+    "@syncfusion/ej2-react-popups": "^25.2.4",
     "antd": "^5.17.0",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",

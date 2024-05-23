@@ -19,6 +19,17 @@ i18n
         resources: {
             EN: {
                 translation: {
+                    // General
+                    Yes: 'Yes',
+                    No: 'No',
+                    Username: 'Username',
+                    Password: 'Password',
+                    'Sign in': 'Sign in',
+                    'Invalid credentials': 'Invalid credentials',
+                    'will be deleted': 'will be deleted',
+                    'Are you sure?': 'Are you sure?',
+                    'Are you sure delete this item?': 'Are you sure delete this item?',
+
                     Name: 'Name',
                     Country: 'Country',
                     Manage: 'Manage',
@@ -52,6 +63,7 @@ i18n
                     Delete: 'Delete',
                     'Export to Excel': 'Export to Excel',
                     'Export to PDF': 'Export to PDF',
+                    'Error while fetching data, please try again': 'Error while fetching data, please try again',
                     'Successfully added': 'Successfully added',
                     'Error while adding, please try again': 'Error while adding, please try again',
                     'Successfully edited': 'Successfully edited',
@@ -62,6 +74,18 @@ i18n
             },
             PL: {
                 translation: {
+                    // General
+                    Yes: 'Tak',
+                    No: 'Nie',
+                    Username: 'Nazwa użytkownika',
+                    Password: 'Hasło',
+                    'Sign in': 'Zaloguj',
+                    'Invalid credentials': 'Nieprawidłowe dane',
+                    'will be deleted': 'zostanie usunięty',
+                    'Are you sure?': 'Czy na pewno?',
+                    'Are you sure delete this item?': 'Czy na pewno usunąć ten element?',
+
+
                     Name: 'Nazwa',
                     Country: 'Kraj',
                     Manage: 'Zarządzaj',
@@ -96,6 +120,7 @@ i18n
                     Delete: 'Usuń',
                     'Export to Excel': 'Eksport do Excel',
                     'Export to PDF': 'Eksport do PDF',
+                    'Error while fetching data, please try again': 'Błąd podczas pobierania danych, spróbuj ponownie',
                     'Successfully added': 'Pomyślnie dodano',
                     'Error while adding, please try again': 'Błąd podczas dodawania, spróbuj ponownie',
                     'Successfully edited': 'Pomyślnie edytowano',
