@@ -166,6 +166,12 @@
   color: #fff;
 }
 
+.dark-theme .e-pager div.e-icons.e-pager-default {
+  transition: all 0.4s;
+  background-color: #333333;
+  color: #ffffff;
+}
+
 .dark-theme .e-pager .e-prevpagedisabled,
 .dark-theme .e-pager .e-prevpage,
 .dark-theme .e-pager .e-nextpage,

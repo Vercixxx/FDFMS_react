@@ -109,7 +109,6 @@ const MyBreadcrumb: React.FC = () => {
   const dispatch = useDispatch();
   const switchToComponent = (component: string) => {
     if (component && currentComponent !== component) {
-      console.log("component", currentComponent);
       dispatch(
         setCurrentMainComponent({
           value: component,

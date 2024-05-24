@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-import { GetStates, AddState, DeleteState, IState } from "../../scripts/states";
+import { GetStates, DeleteState } from "../../scripts/states";
 
 // Mui
 import Button from "@mui/material/Button";
@@ -24,9 +24,6 @@ import {
   FilterSettingsModel,
 } from "@syncfusion/ej2-react-grids";
 
-// Syncfusion - Modal
-import { DialogComponent } from "@syncfusion/ej2-react-popups";
-
 // Theme
 import { ThemeContext } from "../../config/ThemeContext";
 
@@ -35,6 +32,7 @@ import "./GridStyles.css";
 
 // Icons
 import LocationCityIcon from "@mui/icons-material/LocationCity";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 // Ant Design Icons
 import {
@@ -45,25 +43,20 @@ import {
   PlusCircleFilled,
 } from "@ant-design/icons";
 
-// Ant Design Modal
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Modal } from "antd";
-
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
 
 // Dialog State Template
 import DialogStateTemplate from "./DialogStateTemplate";
 
-// ================== MyDrawer ==================
+// MyDrawer
 import { useDispatch } from "react-redux";
 import { openDrawer } from "../../store/drawerSlice";
-
-// ================== MyDrawer ==================
 
 // i18n
 import { useTranslation } from "react-i18next";
 import DeleteConfirmModal from "./ModalDelete";
+import { GridExportSettingsTemplate } from "./GridExportSettingsTemplate";
 
 const ManageStatesComponent: React.FC = () => {
   const [states, setStates] = React.useState<any[]>([]);
@@ -105,8 +98,50 @@ const ManageStatesComponent: React.FC = () => {
     fetchData();
   }, []);
 
+  // Configurations
+  const pageSizeOptions = [5, 10, 20, 50, 100];
+  const [pageSettings, setPageSettings] = useState({ pageSize: 10 });
+  const changePageSize = (e) => {
+    setPageSettings({ pageSize: e.target.value });
+  };
+  const exportOptions = [
+    {
+      key: "AllPages",
+      text: "All pages",
+    },
+    {
+      key: "CurrentPage",
+      text: "Current page",
+    },
+    {
+      key: "SelectedRows",
+      text: "Selected rows",
+    },
+  ];
+  const [exportType, setExportType] = useState(exportOptions[0].key);
+  const changeExportType = (e) => {
+    setExportType(e.target.value);
+  };
+
+  const openSettingsDrawer = () => {
+    dispatch(
+      openDrawer({
+        title: `${t("Settings")}`,
+        component: (
+          <GridExportSettingsTemplate
+            selectedPageSize={pageSettings.pageSize}
+            pageSizeOptions={pageSizeOptions}
+            changePageSize={changePageSize}
+            selectedExportType={exportType}
+            changeExportTypeOptions={exportOptions}
+            changeExportType={changeExportType}
+          />
+        ),
+      })
+    );
+  };
+
   let grid = useRef<Grid | null>(null);
-  const pageSettings = { pageSize: 15 };
 
   // Syncfusion - Sorting
   const sortOptions: SortSettingsModel = {
@@ -132,7 +167,6 @@ const ManageStatesComponent: React.FC = () => {
   });
   const showDeleteConfirm = (items: any) => {
     const selectedRecords = grid.current?.getSelectedRecords();
-    console.log(selectedRecords);
 
     let title = "";
     let content = "";
@@ -268,7 +302,7 @@ const ManageStatesComponent: React.FC = () => {
             color="info"
             onClick={() =>
               grid.current?.excelExport({
-                fileName: "States.xlsx",
+                fileName: `${t("States")}.xlsx`,
                 header: {
                   headerRows: 1,
                   rows: [
@@ -276,8 +310,9 @@ const ManageStatesComponent: React.FC = () => {
                       cells: [
                         {
                           colSpan: 2,
-                          value:
-                            "Food Delivery Fleet Management System - States",
+                          value: `Food Delivery Fleet Management System - ${t(
+                            "States"
+                          )}`,
                           style: {
                             hAlign: "Center",
                             bold: true,
@@ -317,14 +352,16 @@ const ManageStatesComponent: React.FC = () => {
             color="info"
             onClick={() =>
               grid.current?.pdfExport({
-                fileName: "States.pdf",
+                fileName: `${t("States")}.pdf`,
                 header: {
                   fromTop: 0,
                   height: 130,
                   contents: [
                     {
                       type: "Text",
-                      value: "Food Delivery Fleet Management System - States",
+                      value: `Food Delivery Fleet Management System - ${t(
+                        "States"
+                      )}`,
                       position: { x: 0, y: 50 },
                       style: { textBrushColor: "#000000", fontSize: 14 },
                     },
@@ -405,6 +442,17 @@ const ManageStatesComponent: React.FC = () => {
       <div className="text-3xl mb-3">
         <LocationCityIcon style={{ fontSize: "40px" }} />
         {t("Manage States")}
+      </div>
+
+      <div className="my-3">
+        <Button
+          variant="outlined"
+          onClick={openSettingsDrawer}
+          className="hover:scale-105"
+        >
+          <SettingsIcon />
+          {t("Settings")}
+        </Button>
       </div>
 
       {toolbarTemplate()}

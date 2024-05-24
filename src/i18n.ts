@@ -33,13 +33,17 @@ i18n
                     'Are you sure delete this item?': 'Are you sure delete this item?',
                     'Error': 'Error',
                     'Opration isn\'t allowed': 'Opration isn\'t allowed',
+                    Settings: 'Settings',
 
                     // Logout
                     'Are you sure you want to logout?': 'Are you sure you want to logout?',
 
                     Name: 'Name',
+                    Names: 'Names',
                     Country: 'Country',
+                    Countries: 'Countries',
                     Manage: 'Manage',
+                    State: 'State',
                     States: 'States',
                     'Manage States': 'Manage States',
 
@@ -79,6 +83,12 @@ i18n
                     'Error while editing, please try again': 'Error while editing, please try again',
                     'Successfully deleted': 'Successfully deleted',
                     'Error while deleting, please try again': 'Error while deleting, please try again',
+                    'Items per page': 'Items per page',
+                    'Page size': 'Page size',
+                    'Export type': 'Export type',
+                    'All pages': 'All pages',
+                    'Current page': 'Current page',
+                    'Selected rows': 'Selected rows',
                 },
             },
             PL: {
@@ -97,14 +107,18 @@ i18n
                     'Are you sure delete this item?': 'Czy na pewno usunąć ten element?',
                     'Error': 'Błąd',
                     'Opration isn\'t allowed': 'Operacja niedozwolona',
+                    Settings: 'Ustawienia',
 
                     // Logout
                     'Are you sure you want to logout?': 'Czy napewno chcesz sie wylogowac?',
 
                     Name: 'Nazwa',
+                    Names: 'Nazwy',
                     Country: 'Kraj',
+                    Countries: 'Kraje',
                     Manage: 'Zarządzaj',
-                    States: 'Województwami',
+                    States: 'Województwa',
+                    State: 'Województwo',
                     'Manage States': 'Zarządzaj województwami',
 
 
@@ -125,7 +139,7 @@ i18n
                     'Manage Users': 'Zarządzaj użytkownikami',
                     'Manage countries': 'Zarządzaj krajami',
                     'Manage states': 'Zarządzaj województwami',
-                    
+
 
 
                     // GridComponent
@@ -144,7 +158,12 @@ i18n
                     'Error while editing, please try again': 'Błąd podczas edycji, spróbuj ponownie',
                     'Successfully deleted': 'Pomyślnie usunięto',
                     'Error while deleting, please try again': 'Błąd podczas usuwania, spróbuj ponownie',
-
+                    'Items per page': 'Elementy na stronę',
+                    'Page size': 'Rozmiar strony',
+                    'Export type': 'Typ eksportu',
+                    'All pages': 'Wszystkie strony',
+                    'Current page': 'Obecna strona',
+                    'Selected rows': 'Wybrane rekordy',
                 },
             },
         },

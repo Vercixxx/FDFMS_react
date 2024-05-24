@@ -86,7 +86,6 @@ const MyMenu: React.FC = () => {
       }
 
       setSelectedItem(item);
-      console.log(item.key);
 
       switch (item.key) {
         case "HRAddUserComponent":

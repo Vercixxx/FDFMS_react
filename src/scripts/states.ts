@@ -18,8 +18,6 @@ export const GetStates = async () => {
 
 export const AddState = async (data: IState) => {
     try {
-        console.log(data);
-        
         await axios.post('api/states/add/', data, {
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +25,6 @@ export const AddState = async (data: IState) => {
         });
         return true;
     } catch (error) {
-        console.log(error);
         return false;
     }
 }

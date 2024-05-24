@@ -98,32 +98,6 @@ const LoginForm = () => {
       >
         {t("Sign in")}
       </Button>
-      {/* <LoadingButton
-        size="large"
-        color="success"
-        onClick={async (event) => {
-          event.preventDefault();
-
-          setLoading(true);
-
-          console.log(username, password);
-
-          const response = await SignInUser(username, password);
-
-          if (response) {
-            navigate("/dashboard");
-          } else {
-            alert("Invalid credentials");
-          }
-
-          setLoading(false);
-        }}
-        loading={loading}
-        variant="contained"
-      >
-        <span>Login</span>
-      </LoadingButton> */}
-
       {/* Button */}
     </form>
   );

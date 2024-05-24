@@ -39,7 +39,6 @@ const LanguageSelector = () => {
     setLanguage(newLanguage);
 
     await i18n.changeLanguage(newLanguage);
-    console.log(i18n.language);
     localStorage.setItem("i18nextLng", newLanguage);
     window.location.reload();
   };

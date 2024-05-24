@@ -10,8 +10,6 @@ import { Controller } from "react-hook-form";
 
 import { AddState, IState, EditState } from "../../scripts/states";
 
-
-
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
 
@@ -42,7 +40,6 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
   };
   React.useEffect(() => {
     fetchCountries();
-    console.log("Countries: ", countries);
   }, []);
   // Get Countries
 
