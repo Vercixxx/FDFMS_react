@@ -30,6 +30,9 @@ i18n
                     'Are you sure?': 'Are you sure?',
                     'Are you sure delete this item?': 'Are you sure delete this item?',
 
+                    // Logout
+                    'Are you sure you want to logout?': 'Are you sure you want to logout?',
+
                     Name: 'Name',
                     Country: 'Country',
                     Manage: 'Manage',
@@ -85,6 +88,8 @@ i18n
                     'Are you sure?': 'Czy na pewno?',
                     'Are you sure delete this item?': 'Czy na pewno usunąć ten element?',
 
+                    // Logout
+                    'Are you sure you want to logout?': 'Czy napewno chcesz sie wylogowac?',
 
                     Name: 'Nazwa',
                     Country: 'Kraj',

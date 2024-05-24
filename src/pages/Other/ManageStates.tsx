@@ -63,6 +63,7 @@ import { openDrawer } from "../../store/drawerSlice";
 
 // i18n
 import { useTranslation } from "react-i18next";
+import DeleteConfirmModal from "./ModalDelete";
 
 const ManageStatesComponent: React.FC = () => {
   const [states, setStates] = React.useState<any[]>([]);
@@ -120,58 +121,25 @@ const ManageStatesComponent: React.FC = () => {
   // Syncfusion
 
   // Syncfusion - Delete
-  const { confirm } = Modal;
-
-  const dialogInstance = useRef(null);
-  const settings = { effect: "Zoom", duration: 200, delay: 0 };
-  const buttons = [
-    {
-      buttonModel: {
-        content: "OK",
-        cssClass: "e-flat",
-        isPrimary: true,
-      },
-      click: () => {
-        if (dialogInstance.current) {
-          dialogInstance.current.hide();
-        }
-      },
-    },
-    {
-      buttonModel: {
-        content: "Cancel",
-        cssClass: "e-flat",
-      },
-      click: () => {
-        if (dialogInstance.current) {
-          dialogInstance.current.hide();
-        }
-      },
-    },
-  ];
-
-  const handleClick = () => {
-    if (dialogInstance.current) {
-      dialogInstance.current.show();
-    }
-  };
-
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const [dialogDeleteData, setDialogDeleteData] = useState({
+    title: "",
+    content: "",
+    okText: "",
+    cancelText: "",
+    onOk: () => {},
+    onCancel: () => {},
+  });
   const showDeleteConfirm = (item: any) => {
-    // confirm({
-    //   title: t("Are you sure delete this item?"),
-    //   icon: <ExclamationCircleFilled />,
-    //   content: `${item?.name || ""} ${t("will be deleted")}.`,
-    //   okText: t("Yes"),
-    //   okType: "danger",
-    //   cancelText: t("No"),
-    //   onOk() {
-    //     handleDelete(item?.id);
-    //   },
-    //   onCancel() {},
-
-    //   centered: true,
-    // });
-    handleClick();
+    setDialogDeleteData({
+      title: t("Are you sure delete this item?"),
+      content: `${item?.name || ""} ${t("will be deleted")}.`,
+      okText: t("Yes"),
+      cancelText: t("No"),
+      onOk: () => handleDelete(item?.id),
+      onCancel: () => {},
+    });
+    setDeleteDialogVisible(true);
   };
 
   const handleDelete = async (id: number) => {
@@ -463,19 +431,11 @@ const ManageStatesComponent: React.FC = () => {
         />
       </GridComponent>
 
-      <div id="dialog-target">
-        <DialogComponent
-          width="250px"
-          animationSettings={settings}
-          target="#dialog-target"
-          header="Dialog"
-          showCloseIcon={true}
-          buttons={buttons}
-          ref={dialogInstance}
-        >
-          Dialog enabled with Zoom effect
-        </DialogComponent>
-      </div>
+      <DeleteConfirmModal
+        dialogDeleteData={dialogDeleteData}
+        open={deleteDialogVisible}
+        setOpen={setDeleteDialogVisible}
+      />
     </div>
   );
 };
