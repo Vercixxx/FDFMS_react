@@ -29,6 +29,8 @@ i18n
                     'will be deleted': 'will be deleted',
                     'Are you sure?': 'Are you sure?',
                     'Are you sure delete this item?': 'Are you sure delete this item?',
+                    'Error': 'Error',
+                    'Opration isn\'t allowed': 'Opration isn\'t allowed',
 
                     // Logout
                     'Are you sure you want to logout?': 'Are you sure you want to logout?',
@@ -64,6 +66,8 @@ i18n
                     Edit: 'Edit',
                     Copy: 'Copy',
                     Delete: 'Delete',
+                    Item: 'Item',
+                    Items: 'Items',
                     'Export to Excel': 'Export to Excel',
                     'Export to PDF': 'Export to PDF',
                     'Error while fetching data, please try again': 'Error while fetching data, please try again',
@@ -87,6 +91,8 @@ i18n
                     'will be deleted': 'zostanie usunięty',
                     'Are you sure?': 'Czy na pewno?',
                     'Are you sure delete this item?': 'Czy na pewno usunąć ten element?',
+                    'Error': 'Błąd',
+                    'Opration isn\'t allowed': 'Operacja niedozwolona',
 
                     // Logout
                     'Are you sure you want to logout?': 'Czy napewno chcesz sie wylogowac?',
@@ -123,6 +129,8 @@ i18n
                     Edit: 'Edytuj',
                     Copy: 'Kopiuj',
                     Delete: 'Usuń',
+                    Item: 'Element',
+                    Items: 'Elementy/ów',
                     'Export to Excel': 'Eksport do Excel',
                     'Export to PDF': 'Eksport do PDF',
                     'Error while fetching data, please try again': 'Błąd podczas pobierania danych, spróbuj ponownie',

@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import {
   ColumnDirective,
   ColumnsDirective,
-  EditSettingsModel,
+  SelectionSettingsModel,
   Grid,
   GridComponent,
   Inject,
@@ -186,7 +186,7 @@ const ManageStatesComponent: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<EditFilled />}
-            disabled={selectedRows.length === 0}
+            disabled={selectedRows.length === 0 || selectedRows.length > 1}
             className="hover:scale-105"
             sx={{
               borderRadius: "12px",
@@ -230,6 +230,10 @@ const ManageStatesComponent: React.FC = () => {
             }}
           >
             {t("Delete")}
+
+            {selectedRows.length >= 1 ? ` ${selectedRows.length} ` : ""}
+            {selectedRows.length === 1 ? `${t("Item")}` : ""}
+            {selectedRows.length > 1 ? `${t("Items")}` : ""}
           </Button>
         </div>
 
@@ -345,7 +349,7 @@ const ManageStatesComponent: React.FC = () => {
 
         navigator.clipboard.writeText(formattedRecord);
       }
-    } else if (grid && args.item.id === "EditRow") {
+    }else if (grid && args.item.id === "EditRow") {
       const selectedRecord = grid.current?.getSelectedRecords();
       if (selectedRecord && selectedRecord.length == 1) {
         dispatch(
@@ -360,12 +364,23 @@ const ManageStatesComponent: React.FC = () => {
             ),
           })
         );
+      } else if (selectedRecord && selectedRecord.length > 1) {
+        showSnackbar(t("Opration isn\'t allowed"), "error");
       }
-    } else if (grid && args.item.id === "DeleteRow") {
+    }else if (grid && args.item.id === "DeleteRow") {
       const selectedRecords = grid.current?.getSelectedRecords();
       if (selectedRecords && selectedRecords.length > 0) {
         showDeleteConfirm(selectedRecords[0]);
       }
+    }
+  };
+
+  // Selection
+  const selectionOptions: SelectionSettingsModel = { type: "Multiple" };
+
+  const rowSelected = () => {
+    if (grid) {
+      setSelectedRows(grid.current?.getSelectedRecords());
     }
   };
 
@@ -379,6 +394,8 @@ const ManageStatesComponent: React.FC = () => {
       {toolbarTemplate()}
       <GridComponent
         ref={grid}
+        allowSelection={true}
+        selectionSettings={selectionOptions}
         dataSource={states}
         allowPaging={true}
         pageSettings={pageSettings}
@@ -401,6 +418,7 @@ const ManageStatesComponent: React.FC = () => {
         }}
       >
         <ColumnsDirective>
+          <ColumnDirective type="checkbox" width="50" />
           <ColumnDirective
             field="Id"
             textAlign="Left"
