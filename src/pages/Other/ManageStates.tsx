@@ -130,26 +130,46 @@ const ManageStatesComponent: React.FC = () => {
     onOk: () => {},
     onCancel: () => {},
   });
-  const showDeleteConfirm = (item: any) => {
+  const showDeleteConfirm = (items: any) => {
+    const selectedRecords = grid.current?.getSelectedRecords();
+    console.log(selectedRecords);
+
+    let title = "";
+    let content = "";
+    if (selectedRecords && selectedRecords.length === 1) {
+      title = t("Are you sure delete this item?");
+      content = `${items?.name || ""} ${t("will be deleted")}.`;
+    } else if (selectedRecords && selectedRecords.length > 1) {
+      title = t("Are you sure delete these items?");
+      content = `${selectedRecords.length} ${t("items will be deleted")}.`;
+    }
+
     setDialogDeleteData({
-      title: t("Are you sure delete this item?"),
-      content: `${item?.name || ""} ${t("will be deleted")}.`,
+      title: title,
+      content: content,
       okText: t("Yes"),
       cancelText: t("No"),
-      onOk: () => handleDelete(item?.id),
+      onOk: () => handleDelete(),
       onCancel: () => {},
     });
     setDeleteDialogVisible(true);
   };
 
-  const handleDelete = async (id: number) => {
-    const response = await DeleteState(id);
-    if (response) {
-      fetchData();
+  const handleDelete = async () => {
+    let allDeleted = true;
+    for (let i = 0; i < selectedRows.length; i++) {
+      const response = await DeleteState(selectedRows[i].id);
+      if (!response) {
+        allDeleted = false;
+        break;
+      }
+    }
+    if (allDeleted) {
       showSnackbar(t("Successfully deleted"), "success");
     } else {
       showSnackbar(t("Error while deleting, please try again"), "error");
     }
+    fetchData();
   };
   // Syncfusion - Delete
 
@@ -349,7 +369,7 @@ const ManageStatesComponent: React.FC = () => {
 
         navigator.clipboard.writeText(formattedRecord);
       }
-    }else if (grid && args.item.id === "EditRow") {
+    } else if (grid && args.item.id === "EditRow") {
       const selectedRecord = grid.current?.getSelectedRecords();
       if (selectedRecord && selectedRecord.length == 1) {
         dispatch(
@@ -365,24 +385,20 @@ const ManageStatesComponent: React.FC = () => {
           })
         );
       } else if (selectedRecord && selectedRecord.length > 1) {
-        showSnackbar(t("Opration isn\'t allowed"), "error");
+        showSnackbar(t("Opration isn't allowed"), "error");
       }
-    }else if (grid && args.item.id === "DeleteRow") {
-      const selectedRecords = grid.current?.getSelectedRecords();
-      if (selectedRecords && selectedRecords.length > 0) {
-        showDeleteConfirm(selectedRecords[0]);
+    } else if (grid && args.item.id === "DeleteRow") {
+      const selectedRecord = grid.current?.getSelectedRecords();
+      if (selectedRecord && selectedRecord.length == 1) {
+        showDeleteConfirm(selectedRecord[0]);
+      } else if (selectedRecord && selectedRecord.length > 1) {
+        showSnackbar(t("Opration isn't allowed"), "error");
       }
     }
   };
 
   // Selection
   const selectionOptions: SelectionSettingsModel = { type: "Multiple" };
-
-  const rowSelected = () => {
-    if (grid) {
-      setSelectedRows(grid.current?.getSelectedRecords());
-    }
-  };
 
   return (
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
