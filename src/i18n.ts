@@ -89,6 +89,7 @@ i18n
                     'All pages': 'All pages',
                     'Current page': 'Current page',
                     'Selected rows': 'Selected rows',
+                    'Please select at least one row': 'Please select at least one row',
                 },
             },
             PL: {
@@ -164,6 +165,7 @@ i18n
                     'All pages': 'Wszystkie strony',
                     'Current page': 'Obecna strona',
                     'Selected rows': 'Wybrane rekordy',
+                    'Please select at least one row': 'Proszę wybrać przynajmniej jeden wiersz',
                 },
             },
         },

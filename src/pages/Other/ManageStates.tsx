@@ -119,8 +119,22 @@ const ManageStatesComponent: React.FC = () => {
     },
   ];
   const [exportType, setExportType] = useState(exportOptions[0].key);
+  const [exportDataSource, setExportDataSource] = useState([]);
   const changeExportType = (e) => {
-    setExportType(e.target.value);
+    const newExportType = e.target.value;
+    setExportType(newExportType);
+
+    switch (newExportType) {
+      case "AllPages":
+        setExportDataSource(grid.current?.dataSource);
+        break;
+      case "CurrentPage":
+        setExportDataSource(grid.current?.getCurrentViewRecords());
+        break;
+      case "SelectedRows":
+        setExportDataSource(grid.current?.getSelectedRecords());
+        break;
+    }
   };
 
   const openSettingsDrawer = () => {
@@ -300,45 +314,57 @@ const ManageStatesComponent: React.FC = () => {
               borderRadius: "12px",
             }}
             color="info"
-            onClick={() =>
-              grid.current?.excelExport({
-                fileName: `${t("States")}.xlsx`,
-                header: {
-                  headerRows: 1,
-                  rows: [
-                    {
-                      cells: [
-                        {
-                          colSpan: 2,
-                          value: `Food Delivery Fleet Management System - ${t(
-                            "States"
-                          )}`,
-                          style: {
-                            hAlign: "Center",
-                            bold: true,
-                            fontColor: "#C67878",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-                footer: {
-                  footerRows: 1,
-                  rows: [
-                    {
-                      cells: [
-                        {
-                          colSpan: 2,
-                          value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
-                          style: { hAlign: "Center", bold: true },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              })
+            disabled={
+              exportType === "SelectedRows" &&
+              grid.current?.getSelectedRecords().length === 0
             }
+            onClick={() => {
+              if (
+                exportType === "SelectedRows" &&
+                grid.current?.getSelectedRecords().length === 0
+              ) {
+                showSnackbar(t("Please select at least one row"), "error");
+              } else {
+                grid.current?.excelExport({
+                  dataSource: exportDataSource,
+                  fileName: `${t("States")}.xlsx`,
+                  header: {
+                    headerRows: 1,
+                    rows: [
+                      {
+                        cells: [
+                          {
+                            colSpan: 2,
+                            value: `Food Delivery Fleet Management System - ${t(
+                              "States"
+                            )}`,
+                            style: {
+                              hAlign: "Center",
+                              bold: true,
+                              fontColor: "#C67878",
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  footer: {
+                    footerRows: 1,
+                    rows: [
+                      {
+                        cells: [
+                          {
+                            colSpan: 2,
+                            value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+                            style: { hAlign: "Center", bold: true },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                });
+              }
+            }}
           >
             {t("Export to Excel")}
           </Button>
@@ -350,37 +376,49 @@ const ManageStatesComponent: React.FC = () => {
               borderRadius: "12px",
             }}
             color="info"
-            onClick={() =>
-              grid.current?.pdfExport({
-                fileName: `${t("States")}.pdf`,
-                header: {
-                  fromTop: 0,
-                  height: 130,
-                  contents: [
-                    {
-                      type: "Text",
-                      value: `Food Delivery Fleet Management System - ${t(
-                        "States"
-                      )}`,
-                      position: { x: 0, y: 50 },
-                      style: { textBrushColor: "#000000", fontSize: 14 },
-                    },
-                  ],
-                },
-                footer: {
-                  fromBottom: 0,
-                  height: 130,
-                  contents: [
-                    {
-                      type: "Text",
-                      value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
-                      position: { x: 0, y: 0 },
-                      style: { textBrushColor: "#000000", fontSize: 14 },
-                    },
-                  ],
-                },
-              })
+            disabled={
+              exportType === "SelectedRows" &&
+              grid.current?.getSelectedRecords().length === 0
             }
+            onClick={() => {
+              if (
+                exportType === "SelectedRows" &&
+                grid.current?.getSelectedRecords().length === 0
+              ) {
+                showSnackbar(t("Please select at least one row"), "error");
+              } else {
+                grid.current?.pdfExport({
+                  dataSource: exportDataSource,
+                  fileName: `${t("States")}.pdf`,
+                  header: {
+                    fromTop: 0,
+                    height: 130,
+                    contents: [
+                      {
+                        type: "Text",
+                        value: `Food Delivery Fleet Management System - ${t(
+                          "States"
+                        )}`,
+                        position: { x: 0, y: 50 },
+                        style: { textBrushColor: "#000000", fontSize: 14 },
+                      },
+                    ],
+                  },
+                  footer: {
+                    fromBottom: 0,
+                    height: 130,
+                    contents: [
+                      {
+                        type: "Text",
+                        value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+                        position: { x: 0, y: 0 },
+                        style: { textBrushColor: "#000000", fontSize: 14 },
+                      },
+                    ],
+                  },
+                });
+              }
+            }}
           >
             {t("Export to PDF")}
           </Button>
