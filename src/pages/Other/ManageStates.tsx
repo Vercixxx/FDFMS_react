@@ -429,7 +429,8 @@ const ManageStatesComponent: React.FC = () => {
 
   // Context Menu
   const contextMenuItems = [
-    { text: t("Copy"), target: ".e-content", id: "CopyRow" },
+    { text: t("Copy row"), target: ".e-content", id: "CopyRow" },
+    { text: t("Copy selected"), target: ".e-content", id: "CopySelected" },
     { text: t("Edit"), target: ".e-content", id: "EditRow" },
     { text: t("Delete"), target: ".e-content", id: "DeleteRow" },
   ];
@@ -443,6 +444,21 @@ const ManageStatesComponent: React.FC = () => {
           .join(", ");
 
         navigator.clipboard.writeText(formattedRecord);
+      }
+    } else if (args.item.id === "CopySelected") {
+      const selectedRecords = grid.current?.getSelectedRecords();
+      if (selectedRecords && selectedRecords.length > 0) {
+        const formattedRecords = selectedRecords
+          .map((record) =>
+            Object.entries(record)
+              .map(([key, value]) => `${key}: ${value}`)
+              .join(", ")
+          )
+          .join("\n");
+
+        navigator.clipboard.writeText(formattedRecords);
+      } else {
+        showSnackbar(t("Please select at least one row"), "error");
       }
     } else if (grid && args.item.id === "EditRow") {
       const selectedRecord = grid.current?.getSelectedRecords();
