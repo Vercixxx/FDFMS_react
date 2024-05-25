@@ -80,6 +80,7 @@
 }
 
 /* Hover row */
+
 .dark-theme .e-grid .e-row:hover .e-rowcell {
   color: #fff !important;
   background-color: rgba(50, 200, 180, 0.6) !important;
@@ -134,7 +135,7 @@
 .dark-theme .e-grid .e-headercell {
   transition: all 0.4s;
   color: #ffffff;
-  background-color: #666;
+  background-color: #686;
 }
 
 /* Header - sorting text */

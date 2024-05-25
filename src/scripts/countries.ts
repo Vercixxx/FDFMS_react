@@ -21,7 +21,7 @@ export const AddCountry = async (name: string) => {
 }
 
 export const DeleteCountry = async (name: string) => {
-    try {
+    try {        
         await axios.delete(`api/countries/delete/${name}`);
         return true;
     } catch (error) {

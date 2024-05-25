@@ -1,7 +1,11 @@
 import * as React from "react";
 
 import { useDispatch } from "react-redux";
-import { closeDrawer, startLoading, stopLoading } from "../../store/drawerSlice";
+import {
+  closeDrawer,
+  startLoading,
+  stopLoading,
+} from "../../store/drawerSlice";
 
 import { GetCountries } from "../../scripts/countries";
 
@@ -13,6 +17,9 @@ import { AddState, IState, EditState } from "../../scripts/states";
 // Snackbars
 import { useSnackbarContext } from "./../../components/SnackbarContext";
 
+// i18n
+import { useTranslation } from "react-i18next";
+
 // Mui
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -20,6 +27,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
+import FormHelperText from "@mui/material/FormHelperText";
 
 interface DialogStateTemplateProps {
   refreshComponent: boolean;
@@ -43,6 +51,9 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
   }, []);
   // Get Countries
 
+  // i18n
+  const { t } = useTranslation();
+
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
 
@@ -60,14 +71,21 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
         country: data.selectedCountry,
         name: data.stateName,
       };
-      await AddState(transformedData);
+
+      const response = await AddState(transformedData);
+      if (!response) {
+        showSnackbar(t("Error while adding, please try again"), "error");
+        setLoading(false);
+        dispatch(stopLoading());
+        return;
+      }
       dispatch(stopLoading());
       setLoading(false);
       dispatch(closeDrawer());
       setRefreshComponent(true);
-      showSnackbar("State added successfully", "success");
+      showSnackbar(t("Successfully added"), "success");
     } catch (error) {
-      showSnackbar("Error while adding, please try again", "error");
+      showSnackbar(t("Error while adding, please try again"), "error");
       setLoading(false);
     }
   };
@@ -81,13 +99,18 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
         name: newData.stateName,
       };
 
-      await EditState(oldData.id || 0, transformedData);
+      const response = await EditState(oldData.id || 0, transformedData);
+      if (!response) {
+        showSnackbar(t("Error while adding, please try again"), "error");
+        setLoading(false);
+        return;
+      }
       setLoading(false);
       dispatch(closeDrawer());
       setRefreshComponent(true);
-      showSnackbar("State updated successfully", "success");
+      showSnackbar(t("Successfully added"), "success");
     } catch (error) {
-      showSnackbar("Error while updating, please try again", "error");
+      showSnackbar(t("Error while adding, please try again"), "error");
       setLoading(false);
     }
   };
@@ -129,9 +152,8 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
           }
         })}
       >
-        {/* Country */}
-
-        <InputLabel id="country-select">Country</InputLabel>
+        /* Country */
+        <InputLabel id="country-select">{t("Country") + "*"}</InputLabel>
         <Controller
           name="selectedCountry"
           control={control}
@@ -142,8 +164,9 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
               {...field}
               labelId="country-select"
               id="selectedCountry"
-              label="Select country"
+              label={t("Select country")}
               sx={{ width: "100%" }}
+              error={Boolean(errors.selectedCountry)}
             >
               {Array.isArray(countries) &&
                 countries.map((country) => (
@@ -154,20 +177,21 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
             </Select>
           )}
         />
-
+        <FormHelperText>
+          {errors.selectedCountry && (
+            <p className="text-red-600">{t("Field is obliatory")}</p>
+          )}
+        </FormHelperText>
         {/* Name */}
-
         <TextField
           id="state-input"
-          label="Name"
+          label={t("Name") + "*"}
           variant="outlined"
           sx={{ width: "100%", marginTop: "2rem" }}
-          {...register("stateName", { required: true, maxLength: 10 })}
+          error={errors.stateName ? true : false}
+          helperText={errors.stateName ? t("Field is obliatory") : ""}
+          {...register("stateName", { required: true, maxLength: 56 })}
         />
-
-        {errors.stateName && (
-          <p className="text-red-600">This field is required</p>
-        )}
         <div className="my-4" align="center">
           <LoadingButton
             loading={loading}
@@ -177,7 +201,7 @@ const DialogStateTemplate: React.FC<DialogStateTemplateProps> = ({
             type="submit"
             sx={{ width: "50%" }}
           >
-            {stateData ? "Update" : "Save"}
+            {stateData ? t("Update") : t("Save")}
           </LoadingButton>
         </div>
       </form>

@@ -34,6 +34,7 @@ import "./GridStyles.css";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import SettingsIcon from "@mui/icons-material/Settings";
 
+
 // Ant Design Icons
 import {
   FileExcelFilled,
@@ -237,7 +238,7 @@ const ManageStatesComponent: React.FC = () => {
             onClick={() => {
               dispatch(
                 openDrawer({
-                  title: "Add State",
+                  title: t("Add State"),
                   component: (
                     <DialogStateTemplate
                       refreshComponent={refreshComponent}
@@ -265,7 +266,7 @@ const ManageStatesComponent: React.FC = () => {
               if (selectedRecord && selectedRecord.length == 1) {
                 dispatch(
                   openDrawer({
-                    title: "Edit State",
+                    title: t("Edit State"),
                     component: (
                       <DialogStateTemplate
                         refreshComponent={refreshComponent}
@@ -493,20 +494,21 @@ const ManageStatesComponent: React.FC = () => {
 
   return (
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
-      <div className="text-3xl mb-3">
-        <LocationCityIcon style={{ fontSize: "40px" }} />
-        {t("Manage States")}
-      </div>
-
-      <div className="my-3">
-        <Button
-          variant="outlined"
-          onClick={openSettingsDrawer}
-          className="hover:scale-105"
-        >
-          <SettingsIcon />
-          {t("Settings")}
-        </Button>
+      <div className="flex justify-between">
+        <div className="text-3xl mb-3">
+          <LocationCityIcon style={{ fontSize: "40px" }} />
+          {t("Manage States")}
+        </div>
+        <div className="">
+          <Button
+            startIcon={<SettingsIcon />}
+            variant="outlined"
+            onClick={openSettingsDrawer}
+            className="hover:scale-105"
+          >
+            <div className="flex justify-between">{t("Settings")}</div>
+          </Button>
+        </div>
       </div>
 
       {toolbarTemplate()}

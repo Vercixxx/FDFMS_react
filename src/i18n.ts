@@ -33,7 +33,11 @@ i18n
                     'Are you sure delete this item?': 'Are you sure delete this item?',
                     'Error': 'Error',
                     'Opration isn\'t allowed': 'Opration isn\'t allowed',
+                    'Field is obliatory': 'Field is obliatory',
                     Settings: 'Settings',
+                    'Save': 'Save',
+                    'Update': 'Update',
+                    'Cancel': 'Cancel',
 
                     // Logout
                     'Are you sure you want to logout?': 'Are you sure you want to logout?',
@@ -45,7 +49,8 @@ i18n
                     Manage: 'Manage',
                     State: 'State',
                     States: 'States',
-                    'Manage States': 'Manage States',
+
+
 
 
                     // Menu / BreadCrumb
@@ -63,8 +68,18 @@ i18n
                     Manager: 'Manager',
                     Driver: 'Driver',
                     'Manage Users': 'Manage Users',
+                    'Manage Countries': 'Manage Countries',
                     'Manage countries': 'Manage countries',
+                    'Manage States': 'Manage States',
                     'Manage states': 'Manage states',
+                    'Add State': 'Add State',
+                    'Add Country': 'Add Country',
+
+                    'Edit State': 'Edit State',
+                    'Edit Country': 'Edit Country',
+
+                    'State added successfully': 'State added successfully',
+                    'Country added successfully': 'Country added successfully',
 
 
                     // GridComponent
@@ -110,7 +125,11 @@ i18n
                     'Are you sure delete this item?': 'Czy na pewno usunąć ten element?',
                     'Error': 'Błąd',
                     'Opration isn\'t allowed': 'Operacja niedozwolona',
+                    'Field is obliatory': 'Pole jest obowiązkowe',
                     Settings: 'Ustawienia',
+                    'Save': 'Zapisz',
+                    'Update': 'Aktualizuj',
+                    'Cancel': 'Anuluj',
 
                     // Logout
                     'Are you sure you want to logout?': 'Czy napewno chcesz sie wylogowac?',
@@ -140,8 +159,13 @@ i18n
                     Manager: 'Menedżer',
                     Driver: 'Kierowca',
                     'Manage Users': 'Zarządzaj użytkownikami',
+                    'Manage Countries': 'Zarządzaj krajami',
                     'Manage countries': 'Zarządzaj krajami',
                     'Manage states': 'Zarządzaj województwami',
+                    'Add State': 'Dodaj województwo',
+                    'Edit State': 'Edytuj województwo',
+                    'Add Country': 'Dodaj kraj',
+                    'Edit Country': 'Edytuj kraj',
 
 
 
