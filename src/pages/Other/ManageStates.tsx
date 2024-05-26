@@ -34,7 +34,6 @@ import "./GridStyles.css";
 import LocationCityIcon from "@mui/icons-material/LocationCity";
 import SettingsIcon from "@mui/icons-material/Settings";
 
-
 // Ant Design Icons
 import {
   FileExcelFilled,
@@ -121,22 +120,21 @@ const ManageStatesComponent: React.FC = () => {
   ];
   const [exportType, setExportType] = useState(exportOptions[0].key);
   const [exportDataSource, setExportDataSource] = useState([]);
+
   const changeExportType = (e) => {
     const newExportType = e.target.value;
     setExportType(newExportType);
-
-    switch (newExportType) {
-      case "AllPages":
-        setExportDataSource(grid.current?.dataSource);
-        break;
-      case "CurrentPage":
-        setExportDataSource(grid.current?.getCurrentViewRecords());
-        break;
-      case "SelectedRows":
-        setExportDataSource(grid.current?.getSelectedRecords());
-        break;
-    }
   };
+
+  const ExportData = (type: string) => {
+    if (type === "AllPages") {
+      return grid.current?.dataSource;
+    } else if (type === "CurrentPage") {
+      return grid.current?.getCurrentViewRecords();
+    } else if (type === "SelectedRows") {
+      return grid.current?.getSelectedRecords();
+    }
+  }
 
   const openSettingsDrawer = () => {
     dispatch(
@@ -320,6 +318,7 @@ const ManageStatesComponent: React.FC = () => {
               grid.current?.getSelectedRecords().length === 0
             }
             onClick={() => {
+
               if (
                 exportType === "SelectedRows" &&
                 grid.current?.getSelectedRecords().length === 0
@@ -327,7 +326,7 @@ const ManageStatesComponent: React.FC = () => {
                 showSnackbar(t("Please select at least one row"), "error");
               } else {
                 grid.current?.excelExport({
-                  dataSource: exportDataSource,
+                  dataSource: ExportData(exportType),
                   fileName: `${t("States")}.xlsx`,
                   header: {
                     headerRows: 1,
@@ -389,7 +388,7 @@ const ManageStatesComponent: React.FC = () => {
                 showSnackbar(t("Please select at least one row"), "error");
               } else {
                 grid.current?.pdfExport({
-                  dataSource: exportDataSource,
+                  dataSource: ExportData(exportType),
                   fileName: `${t("States")}.pdf`,
                   header: {
                     fromTop: 0,
@@ -510,7 +509,10 @@ const ManageStatesComponent: React.FC = () => {
           </Button>
         </div>
       </div>
-
+      {exportType}
+      {exportDataSource.map((row) => (
+        <div key={row.id}>{row.name}</div>
+      ))}
       {toolbarTemplate()}
       <GridComponent
         ref={grid}
