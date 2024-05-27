@@ -36,6 +36,7 @@ import {
   Grid,
   GridComponent,
   Inject,
+  DetailRow,
   Page,
   Toolbar,
   ContextMenu,
@@ -45,6 +46,7 @@ import {
   SortSettingsModel,
   Filter,
   FilterSettingsModel,
+  Edit,
 } from "@syncfusion/ej2-react-grids";
 
 // Ant Design Icons
@@ -55,6 +57,13 @@ import {
   EditFilled,
   PlusCircleFilled,
 } from "@ant-design/icons";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 const ManageUsersComponent: React.FC = () => {
   // Pagination
@@ -86,8 +95,12 @@ const ManageUsersComponent: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getUsers(RequestParams.current);
-      setResponse(data);
-      console.log(data);
+      if (data.type === "error") {
+        console.log(data);
+        showSnackbar(data.message, "error");
+      } else {
+        setResponse(data);
+      }
     };
     fetchData();
   }, []);
@@ -104,7 +117,62 @@ const ManageUsersComponent: React.FC = () => {
   const dispatch = useDispatch();
   const [refreshComponent, setRefreshComponent] = useState<boolean>(false);
 
+  // Snackbars
+  const { showSnackbar } = useSnackbarContext();
+
   // Configurations
+  //Columns
+  const AllColumns = [
+    {
+      field: "username",
+      headerText: "Username",
+      textAlign: "Left",
+    },
+    {
+      field: "email",
+      headerText: "Email",
+      textAlign: "Left",
+    },
+    {
+      field: "user_role",
+      headerText: "Role",
+      textAlign: "Left",
+    },
+    {
+      field: "is_active",
+      headerText: "Status",
+      textAlign: "Left",
+    },
+    {
+      field: "date_joined",
+      headerText: "Date joined",
+      textAlign: "Left",
+    },
+  ];
+  const DriverColumns = [
+    {
+      field: "username",
+      headerText: "Username",
+      textAlign: "Left",
+    },
+    {
+      field: "email",
+      headerText: "Email",
+      textAlign: "Left",
+    },
+    {
+      field: "is_active",
+      headerText: "Status",
+      textAlign: "Left",
+    },
+    {
+      field: "date_joined",
+      headerText: "Date joined",
+      textAlign: "Left",
+    },
+  ];
+  let columns = AllColumns;
+
   // Pagination
   const pageSizeOptions = [5, 10, 20, 50, 100];
   const [pageSettings, setPageSettings] = useState({ pageSize: 10 });
@@ -124,6 +192,14 @@ const ManageUsersComponent: React.FC = () => {
   const [role, setRole] = useState("All");
   const changeRole = (e) => {
     RequestParams.current.role = e.target.value;
+    switch (e.target.value) {
+      case "Driver":
+        columns = DriverColumns;
+        break;
+      default:
+        columns = AllColumns;
+        break;
+    }
   };
   //Status
   const statusOptions = [
@@ -182,67 +258,40 @@ const ManageUsersComponent: React.FC = () => {
     }
   };
 
-  //Columns
-  const AllColumns = [
-    {
-      field: "username",
-      headerText: "Username",
-      textAlign: "Left",
-    },
-    {
-      field: "email",
-      headerText: "Email",
-      textAlign: "Left",
-    },
-    {
-      field: "user_role",
-      headerText: "Role",
-      textAlign: "Left",
-    },
-    {
-      field: "is_active",
-      headerText: "Status",
-      textAlign: "Left",
-    },
-    {
-      field: "date_joined",
-      headerText: "Date joined",
-      textAlign: "Left",
-    },
-  ];
-  const DriverColumns = [
-    {
-      field: "username",
-      headerText: "Username",
-      textAlign: "Left",
-    },
-    {
-      field: "email",
-      headerText: "Email",
-      textAlign: "Left",
-    },
-    {
-      field: "is_active",
-      headerText: "Status",
-      textAlign: "Left",
-    },
-    {
-      field: "date_joined",
-      headerText: "Date joined",
-      textAlign: "Left",
-    },
-  ];
-  let columns = AllColumns;
-  React.useEffect(() => {
-    switch (role) {
-      case "Driver":
-        columns = DriverColumns;
-        break;
-      default:
-        columns = AllColumns;
-        break;
-    }
-  }, [role]);
+  //   Sorting
+  const sortOptions: SortSettingsModel = {
+    columns: [{ field: "Name", direction: "Ascending" }],
+  };
+
+  //   Details
+  const detailsTemplate = (props) => {
+    const src = props.EmployeeID + ".png";
+    return (
+      <div className={`py-4 ${darkMode ? "text-white" : "text-black"}`}>
+        <Table aria-label="details-table" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Key</TableCell>
+              <TableCell>Value</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.entries(props).map(([key, value]) => (
+              <TableRow key={key} className="hover:translate-x-1">
+                <TableCell component="th" scope="row">
+                  {key.toUpperCase()}
+                </TableCell>
+                <TableCell>
+                  {JSON.stringify(value).toUpperCase().replace(/^"|"$/g, "")}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
   // =================== Grid ===================
 
   const openSettingsDrawer = () => {
@@ -282,13 +331,12 @@ const ManageUsersComponent: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid */}
       <GridComponent
-        ref={grid}
+        ref={grid as React.RefObject<GridComponent>}
         allowSelection={true}
         queryCellInfo={customCell}
-        // selectionSettings={selectionOptions}
-        dataSource={response.results || []}
+        selectionSettings={selectionOptions}
+        dataSource={response?.results || []}
         allowPaging={true}
         pageSettings={pageSettings}
         allowExcelExport={true}
@@ -296,7 +344,7 @@ const ManageUsersComponent: React.FC = () => {
         // enableAdaptiveUI={true}
         // rowRenderingMode="Vertical"
         allowSorting={true}
-        // sortSettings={sortOptions}
+        sortSettings={sortOptions}
         allowMultiSorting={true}
         allowFiltering={true}
         // filterSettings={filterOptions}
@@ -308,6 +356,7 @@ const ManageUsersComponent: React.FC = () => {
         rowDeselected={(args) => {
           setSelectedRows(grid.current?.getSelectedRecords());
         }}
+        detailTemplate={detailsTemplate}
       >
         <ColumnsDirective>
           {columns.map((column) => (
@@ -318,6 +367,18 @@ const ManageUsersComponent: React.FC = () => {
             ></ColumnDirective>
           ))}
         </ColumnsDirective>
+
+        <Inject
+          services={[
+            DetailRow,
+            ExcelExport,
+            PdfExport,
+            Sort,
+            Filter,
+            ContextMenu,
+            Edit,
+          ]}
+        ></Inject>
       </GridComponent>
     </div>
   );

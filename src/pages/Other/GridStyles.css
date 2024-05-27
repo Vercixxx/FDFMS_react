@@ -71,6 +71,13 @@
   color: #fff;
 }
 
+/* Details */
+
+.light-theme .e-grid .e-icons:not(.e-btn-icon) {
+  transition: all 0.4s;
+  color: #000;
+}
+
 /* Dark theme */
 .dark-theme .e-grid {
   transition: all 0.4s;
@@ -202,4 +209,27 @@
   transition: all 0.4s;
   background-color: #333333;
   color: #ffffff;
+}
+
+/* Details */
+.dark-theme .e-grid .e-headercell,
+.e-grid .e-detailheadercell {
+  background-color: #555 !important;
+  color: #fff;
+}
+.dark-theme .e-grid .e-icons:not(.e-btn-icon) {
+  color: #fff;
+}
+.dark-theme .e-detailindentcell,
+.dark-theme .e-detailcell {
+  background-color: #555 !important;
+  color: #fff;
+  border-color: #000;
+}
+
+.e-grid .e-rowcell, .e-grid .e-groupcaption, .e-grid .e-indentcell, .e-grid .e-recordplusexpand, .e-grid .e-recordpluscollapse, .e-grid .e-rowdragdropcell, .e-grid .e-detailrowcollapse, .e-grid .e-detailrowexpand, .e-grid .e-detailindentcell, .e-grid .e-detailcell, .e-grid .e-emptyrow.e-show-added-row .e-lastrowcell {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  border-left: 0px;
+  border-right: 0px;
 }
