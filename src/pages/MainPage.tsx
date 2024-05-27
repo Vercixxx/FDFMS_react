@@ -18,6 +18,7 @@ import MyDrawer from "../pages/Other/MyDrawer";
 
 
 // Pages
+import ManageUsersComponent from "./HR/ManageUsers";
 import HRAddUserComponent from "./HR/AddUser";
 import HomePage from "./HomePage";
 
@@ -27,6 +28,7 @@ import ManageStatesComponent from "../pages/Other/ManageStates";
 
 const componentsOptions = {
   HRAddUserComponent,
+  ManageUsersComponent,
   HomePage,
   ManageCountriesComponent,
   ManageStatesComponent,

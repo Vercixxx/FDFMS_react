@@ -100,7 +100,7 @@ const MyMenu: React.FC = () => {
           dispatch(
             setCurrentMainComponent({
               value: item.key,
-              props: { managing: true },
+              props: {},
             })
           );
           break;

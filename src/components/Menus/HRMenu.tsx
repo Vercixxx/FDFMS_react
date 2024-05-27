@@ -39,6 +39,7 @@ export const useHRMenuItems = (): MenuItem[] => {
         {
           type: "group",
           label: t("Manage Users"),
+          key: "ManageUsersComponent",
           icon: <ManageAccountsIcon />,
         },
       ],

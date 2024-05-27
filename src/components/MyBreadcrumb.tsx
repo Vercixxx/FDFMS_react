@@ -58,6 +58,23 @@ const MyBreadcrumb: React.FC = () => {
         },
       ],
     },
+
+    {
+      title: "ManageUsersComponent",
+      component: "ManageUsersComponent",
+      icon: GroupIcon,
+      path: [
+        {
+          title: t("Users"),
+          icon: GroupIcon,
+        },
+        {
+          title: t("Manage Users"),
+          icon: GroupIcon,
+        },
+      ],
+    },
+
     // All
     {
       title: "ManageCountriesComponent",

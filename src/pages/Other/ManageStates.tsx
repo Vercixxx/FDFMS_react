@@ -509,10 +509,7 @@ const ManageStatesComponent: React.FC = () => {
           </Button>
         </div>
       </div>
-      {exportType}
-      {exportDataSource.map((row) => (
-        <div key={row.id}>{row.name}</div>
-      ))}
+
       {toolbarTemplate()}
       <GridComponent
         ref={grid}
