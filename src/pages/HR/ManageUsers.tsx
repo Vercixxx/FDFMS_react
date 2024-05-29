@@ -534,6 +534,12 @@ const ManageUsersComponent: React.FC = () => {
             selectedExportType={exportType}
             changeExportTypeOptions={exportOptions}
             changeExportType={changeExportType}
+            selectedRole={role}
+            roleOptions={roleOptions}
+            changeRole={changeRole}
+            selectedStatus={status}
+            statusOptions={statusOptions}
+            changeStatus={changeStatus}
           />
         ),
       })

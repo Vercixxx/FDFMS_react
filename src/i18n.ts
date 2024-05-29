@@ -111,6 +111,8 @@ i18n
                     'Status': 'Status',
                     'Date joined': 'Date joined',
                     'Email': 'Email',
+                    'User role': 'User role',
+                    'User status': 'User status',
                 },
             },
             PL: {
@@ -202,6 +204,9 @@ i18n
                     'Status': 'Status',
                     'Date joined': 'Konto od',
                     'Email': 'Email',
+                    'User role': 'Typ użytkownika',
+                    'User status': 'Status użytkownika',
+
                 },
             },
         },

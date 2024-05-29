@@ -17,6 +17,12 @@ interface ManageUsersSettingsDialogProps {
   selectedExportType: string;
   changeExportTypeOptions: any[];
   changeExportType: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedRole: string;
+  roleOptions: any[];
+  changeRole: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedStatus: string;
+  statusOptions: any[];
+  changeStatus: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ManageUsersSettingsDialog: React.FC<
@@ -28,6 +34,12 @@ export const ManageUsersSettingsDialog: React.FC<
   selectedExportType,
   changeExportTypeOptions,
   changeExportType,
+  selectedRole,
+  roleOptions,
+  changeRole,
+  selectedStatus,
+  statusOptions,
+  changeStatus,
 }) => {
   const setPageSize = (e: React.ChangeEvent<HTMLInputElement>) => {
     changePageSize(e);
@@ -46,8 +58,8 @@ export const ManageUsersSettingsDialog: React.FC<
   // Theme
 
   return (
-    <div className={`space-y-8 ${darkMode ? 'text-white' : 'text-black'}`}>
-
+    <div className={`space-y-8 ${darkMode ? "text-white" : "text-black"}`}>
+      {/* Items per page */}
       <TextField
         fullWidth
         id="outlined-select-PageSize"
@@ -62,6 +74,8 @@ export const ManageUsersSettingsDialog: React.FC<
           </MenuItem>
         ))}
       </TextField>
+
+      {/* Export type */}
       <TextField
         fullWidth
         id="outlined-select-exportType"
@@ -73,6 +87,38 @@ export const ManageUsersSettingsDialog: React.FC<
         {changeExportTypeOptions.map((option) => (
           <MenuItem key={option.key} value={option.key}>
             {t(option.text)}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      {/* User role */}
+      <TextField
+        fullWidth
+        id="outlined-select-role"
+        select
+        label={t("User role")}
+        defaultValue={selectedRole}
+        onChange={changeRole}
+      >
+        {roleOptions.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      {/* User status */}
+      <TextField
+        fullWidth
+        id="outlined-select-status"
+        select
+        label={t("User status")}
+        defaultValue={selectedStatus}
+        onChange={changeStatus}
+      >
+        {statusOptions.map((option) => (
+          <MenuItem key={option.key} value={option.key}>
+            {option.text}
           </MenuItem>
         ))}
       </TextField>
