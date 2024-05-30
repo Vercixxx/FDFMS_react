@@ -102,9 +102,10 @@ const ManageUsersComponent: React.FC = () => {
   const fetchData = async () => {
     const data = await getUsers(RequestParams.current);
     if (data.type === "error") {
-      console.log(data);
       showSnackbar(data.message, "error");
     } else {
+      console.log(data);
+
       setResponse(data);
     }
   };
@@ -136,8 +137,23 @@ const ManageUsersComponent: React.FC = () => {
       textAlign: "Left",
     },
     {
+      field: "first_name",
+      headerText: "First name",
+      textAlign: "Left",
+    },
+    {
+      field: "last_name",
+      headerText: "Last name",
+      textAlign: "Left",
+    },
+    {
       field: "email",
       headerText: "Email",
+      textAlign: "Left",
+    },
+    {
+      field: "phone",
+      headerText: "Phone",
       textAlign: "Left",
     },
     {
@@ -168,6 +184,21 @@ const ManageUsersComponent: React.FC = () => {
       textAlign: "Left",
     },
     {
+      field: "first_name",
+      headerText: "First name",
+      textAlign: "Left",
+    },
+    {
+      field: "last_name",
+      headerText: "Last name",
+      textAlign: "Left",
+    },
+    {
+      field: "phone",
+      headerText: "Phone",
+      textAlign: "Left",
+    },
+    {
       field: "is_active",
       headerText: "Status",
       textAlign: "Left",
@@ -177,8 +208,23 @@ const ManageUsersComponent: React.FC = () => {
       headerText: "Date joined",
       textAlign: "Left",
     },
+    {
+      field: "rate",
+      headerText: "Rate",
+      textAlign: "Left",
+    },
+    {
+      field: "user_role",
+      headerText: "User Role",
+      textAlign: "Left",
+    },
+    {
+      field: "wage_tariff",
+      headerText: "Wage Tariff",
+      textAlign: "Left",
+    },
   ];
-  let columns = AllColumns;
+  const [columns, setColumns] = useState(AllColumns);
 
   // Pagination
   const pageSizeOptions = [1, 5, 10, 20, 50, 100];
@@ -203,12 +249,14 @@ const ManageUsersComponent: React.FC = () => {
     RequestParams.current.role = e.target.value;
     setRole(e.target.value);
     fetchData();
+    console.log(e.target.value);
+
     switch (e.target.value) {
       case "Driver":
-        columns = DriverColumns;
+        setColumns(DriverColumns);
         break;
       default:
-        columns = AllColumns;
+        setColumns(AllColumns);
         break;
     }
   };
@@ -278,14 +326,17 @@ const ManageUsersComponent: React.FC = () => {
 
   //   Details
   const detailsTemplate = (props) => {
-    console.log(props as any);
-
     const [userDetails, setUserDetails] = useState({});
 
     const getUserData = async () => {
       const response = await getUserDetails(props.username, props.user_role);
       setUserDetails(response);
-      console.log(userDetails);
+
+      if (response.type === "error") {
+        showSnackbar(response.message, "error");
+      } else {
+        setUserDetails(response);
+      }
     };
 
     React.useEffect(() => {
@@ -297,8 +348,8 @@ const ManageUsersComponent: React.FC = () => {
         <Table aria-label="details-table" size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Key</TableCell>
-              <TableCell>Value</TableCell>
+              <TableCell>{t("Key")}</TableCell>
+              <TableCell>{t("Value")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -307,7 +358,9 @@ const ManageUsersComponent: React.FC = () => {
                 <TableCell component="th" scope="row">
                   {key.toUpperCase()}
                 </TableCell>
-                <TableCell>{JSON.stringify(value).replace(/^"|"$/g, '')}</TableCell>
+                <TableCell>
+                  {JSON.stringify(value).replace(/^"|"$/g, "")}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -541,6 +594,24 @@ const ManageUsersComponent: React.FC = () => {
   };
   // =================== Grid ===================
 
+  // Context Menu
+  const contextMenuItems = [
+    { text: t("Copy row"), target: ".e-content", id: "CopyRow" },
+    { text: t("Copy selected"), target: ".e-content", id: "CopySelected" },
+    {
+      text: t("Export row to Excel"),
+      target: ".e-content",
+      id: "ExportRowToExcel",
+    },
+    {
+      text: t("Export row to PDF"),
+      target: ".e-content",
+      id: "ExportRowToPDF",
+    },
+    { text: t("Edit row"), target: ".e-content", id: "EditRow" },
+    { text: t("Delete row"), target: ".e-content", id: "DeleteRow" },
+  ];
+
   const openSettingsDrawer = () => {
     dispatch(
       openDrawer({
@@ -617,7 +688,7 @@ const ManageUsersComponent: React.FC = () => {
 
       <GridComponent
         ref={grid as React.RefObject<GridComponent>}
-        allowSelection={true}
+        allowSelection={manipulateMode ? true : false}
         queryCellInfo={customCell}
         selectionSettings={selectionOptions}
         dataSource={response.results}
@@ -632,7 +703,7 @@ const ManageUsersComponent: React.FC = () => {
         allowMultiSorting={true}
         allowFiltering={true}
         // filterSettings={filterOptions}
-        // contextMenuItems={contextMenuItems}
+        contextMenuItems={contextMenuItems}
         // contextMenuClick={contextMenuClick}
         rowSelected={(args) => {
           setSelectedRows(grid.current?.getSelectedRecords());
