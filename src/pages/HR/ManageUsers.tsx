@@ -183,10 +183,13 @@ const ManageUsersComponent: React.FC = () => {
   let columns = AllColumns;
 
   // Pagination
-  const pageSizeOptions = [5, 10, 20, 50, 100];
+  const pageSizeOptions = [1, 5, 10, 20, 50, 100];
   const [pageSettings, setPageSettings] = useState({ pageSize: 10 });
   const changePageSize = (e) => {
     RequestParams.current.limit = e.target.value;
+    setPageSettings({ pageSize: e.target.value });
+    fetchData();
+
   };
   // Role
   const roleOptions = [
@@ -201,6 +204,8 @@ const ManageUsersComponent: React.FC = () => {
   const [role, setRole] = useState("All");
   const changeRole = (e) => {
     RequestParams.current.role = e.target.value;
+    setRole(e.target.value);
+    fetchData();
     switch (e.target.value) {
       case "Driver":
         columns = DriverColumns;
@@ -219,6 +224,8 @@ const ManageUsersComponent: React.FC = () => {
   const [status, setStatus] = useState("All");
   const changeStatus = (e) => {
     RequestParams.current.status = e.target.value;
+    setStatus(e.target.value);
+    fetchData();
   };
   //Export
   const exportOptions = [
@@ -578,17 +585,17 @@ const ManageUsersComponent: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-2 ps-2 pt-2 pb-2 mb-3 max-w-56">
-        <div className="text-2xl font-black text-center">Display mode</div>
+      <div className="border-2 ps-2 pt-2 pb-2 pe-2 mb-3 inline-block">
+        <div className="text-2xl font-black text-center">{t("Display mode")}</div>
 
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography>
-            <span className={manipulateMode ? "" : "font-black"}>Details</span>
+            <span className={manipulateMode ? "" : "font-black"}>{t("Detailed")}</span>
           </Typography>
           <PinkSwitch checked={manipulateMode} onChange={switchDetailsMode} />
           <Typography>
             <span className={manipulateMode ? "font-black" : ""}>
-              Manipulate
+              {t("Manipulation")}
             </span>
           </Typography>
         </Stack>
@@ -665,7 +672,7 @@ const ManageUsersComponent: React.FC = () => {
           </div>
         </MuiGrid>
         <MuiGrid item xs={3} align="end">
-          Page {response.current_page} of {response.total_pages}
+          {t("Page")} {response.current_page} {t("of")} {response.total_pages}
         </MuiGrid>
       </MuiGrid>
     </div>

@@ -113,6 +113,11 @@ i18n
                     'Email': 'Email',
                     'User role': 'User role',
                     'User status': 'User status',
+                    'Page': 'Page',
+                    'of': 'of',
+                    'Display mode': 'Display mode',
+                    'Detailed': 'Detailed',
+                    'Manipulation': 'Manipulation',
                 },
             },
             PL: {
@@ -206,6 +211,11 @@ i18n
                     'Email': 'Email',
                     'User role': 'Typ użytkownika',
                     'User status': 'Status użytkownika',
+                    'Page': 'Strona',
+                    'of': 'z',
+                    'Display mode': 'Tryb wyświetlania',
+                    'Detailed': 'Szczegółowy',
+                    'Manipulation': 'Manipulacja danych',
 
                 },
             },
