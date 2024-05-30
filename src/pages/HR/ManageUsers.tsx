@@ -29,6 +29,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Button from "@mui/material/Button";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
+import Pagination from "@mui/material/Pagination";
+import { Grid as MuiGrid } from "@mui/material";
 
 // Syncfusion
 import {
@@ -79,7 +81,7 @@ const ManageUsersComponent: React.FC = () => {
   });
 
   interface Response {
-    currentPage: number;
+    current_page: number;
     next: string | null;
     previous: string | null;
     total_results: number | null;
@@ -89,7 +91,7 @@ const ManageUsersComponent: React.FC = () => {
 
   // Get users
   const [response, setResponse] = useState<Response>({
-    currentPage: 1,
+    current_page: 1,
     next: "",
     previous: "",
     total_results: 0,
@@ -103,6 +105,8 @@ const ManageUsersComponent: React.FC = () => {
       console.log(data);
       showSnackbar(data.message, "error");
     } else {
+      console.log(data);
+      
       setResponse(data);
     }
   };
@@ -125,7 +129,7 @@ const ManageUsersComponent: React.FC = () => {
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
 
-  // Configurations
+  // Configuration
   //Columns
   const AllColumns = [
     {
@@ -645,6 +649,25 @@ const ManageUsersComponent: React.FC = () => {
           ]}
         ></Inject>
       </GridComponent>
+
+      <MuiGrid container className="pt-2">
+        <MuiGrid item xs={3}></MuiGrid>
+        <MuiGrid item xs={6} align="center">
+          <div className="flex align-middle justify-center">
+            <Pagination
+              count={response.total_pages}
+              page={response.current_page}
+              onChange={(event, value) => {
+                RequestParams.current.page = value;
+                fetchData();
+              }}
+            />
+          </div>
+        </MuiGrid>
+        <MuiGrid item xs={3} align="end">
+          Page {response.current_page} of {response.total_pages}
+        </MuiGrid>
+      </MuiGrid>
     </div>
   );
 };
