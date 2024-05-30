@@ -18,7 +18,7 @@ import { ManageUsersSettingsDialog } from "./ManageUsersSettingsDialog";
 import { useTranslation } from "react-i18next";
 
 // Scripts
-import { QueryParams, getUsers } from "../../scripts/users";
+import { QueryParams, getUsers, getUserDetails } from "../../scripts/users";
 
 // Icons
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -105,8 +105,6 @@ const ManageUsersComponent: React.FC = () => {
       console.log(data);
       showSnackbar(data.message, "error");
     } else {
-      console.log(data);
-      
       setResponse(data);
     }
   };
@@ -189,7 +187,6 @@ const ManageUsersComponent: React.FC = () => {
     RequestParams.current.limit = e.target.value;
     setPageSettings({ pageSize: e.target.value });
     fetchData();
-
   };
   // Role
   const roleOptions = [
@@ -281,7 +278,20 @@ const ManageUsersComponent: React.FC = () => {
 
   //   Details
   const detailsTemplate = (props) => {
-    const src = props.EmployeeID + ".png";
+    console.log(props as any);
+
+    const [userDetails, setUserDetails] = useState({});
+
+    const getUserData = async () => {
+      const response = await getUserDetails(props.username, props.user_role);
+      setUserDetails(response);
+      console.log(userDetails);
+    };
+
+    React.useEffect(() => {
+      getUserData();
+    }, []);
+
     return (
       <div className={`py-4 ${darkMode ? "text-white" : "text-black"}`}>
         <Table aria-label="details-table" size="small">
@@ -292,14 +302,12 @@ const ManageUsersComponent: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(props).map(([key, value]) => (
+            {Object.entries(userDetails).map(([key, value]) => (
               <TableRow key={key} className="hover:translate-x-1">
                 <TableCell component="th" scope="row">
                   {key.toUpperCase()}
                 </TableCell>
-                <TableCell>
-                  {JSON.stringify(value).toUpperCase().replace(/^"|"$/g, "")}
-                </TableCell>
+                <TableCell>{JSON.stringify(value).replace(/^"|"$/g, '')}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -586,11 +594,15 @@ const ManageUsersComponent: React.FC = () => {
       </div>
 
       <div className="border-2 ps-2 pt-2 pb-2 pe-2 mb-3 inline-block">
-        <div className="text-2xl font-black text-center">{t("Display mode")}</div>
+        <div className="text-2xl font-black text-center">
+          {t("Display mode")}
+        </div>
 
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography>
-            <span className={manipulateMode ? "" : "font-black"}>{t("Detailed")}</span>
+            <span className={manipulateMode ? "" : "font-black"}>
+              {t("Detailed")}
+            </span>
           </Typography>
           <PinkSwitch checked={manipulateMode} onChange={switchDetailsMode} />
           <Typography>
