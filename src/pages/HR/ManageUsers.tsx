@@ -70,6 +70,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { data } from "autoprefixer";
 
 const ManageUsersComponent: React.FC = () => {
   // Pagination
@@ -269,6 +270,12 @@ const ManageUsersComponent: React.FC = () => {
     setStatus(e.target.value);
     fetchData();
   };
+
+  // =================== Grid ===================
+  let grid = useRef<Grid | null>(null);
+  const selectionOptions: SelectionSettingsModel = { type: "Multiple" };
+  const [selectedRows, setSelectedRows] = React.useState([]);
+
   //Export
   const exportOptions = [
     {
@@ -302,10 +309,83 @@ const ManageUsersComponent: React.FC = () => {
     }
   };
 
-  // =================== Grid ===================
-  let grid = useRef<Grid | null>(null);
-  const selectionOptions: SelectionSettingsModel = { type: "Multiple" };
-  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [exportDetails, setExportDetails] = useState(false);
+  const switchExportDetails = (e) => {
+    setExportDetails(e.target.value);
+  };
+
+  // Export to excel
+  const exportExcelPdf: any = (type: string) => {
+    if (type === "excel") {
+      grid.current?.excelExport({
+        dataSource: ExportData(exportType),
+        fileName: `${t("Users")}.xlsx`,
+        header: {
+          headerRows: 1,
+          rows: [
+            {
+              cells: [
+                {
+                  colSpan: 2,
+                  value: `Food Delivery Fleet Management System - ${t(
+                    "Users"
+                  )}`,
+                  style: {
+                    hAlign: "Center",
+                    bold: true,
+                    fontColor: "#C67878",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        footer: {
+          footerRows: 1,
+          rows: [
+            {
+              cells: [
+                {
+                  colSpan: 2,
+                  value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+                  style: { hAlign: "Center", bold: true },
+                },
+              ],
+            },
+          ],
+        },
+      });
+    } else if (type === "pdf") {
+      grid.current?.pdfExport({
+        dataSource: ExportData(exportType),
+        fileName: `${t("Users")}.pdf`,
+        header: {
+          fromTop: 0,
+          height: 130,
+          contents: [
+            {
+              type: "Text",
+              value: `Food Delivery Fleet Management System - ${t("Users")}`,
+              position: { x: 0, y: 50 },
+              style: { textBrushColor: "#000000", fontSize: 14 },
+            },
+          ],
+        },
+        footer: {
+          fromBottom: 0,
+          height: 130,
+          contents: [
+            {
+              type: "Text",
+              value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+              position: { x: 0, y: 0 },
+              style: { textBrushColor: "#000000", fontSize: 14 },
+            },
+          ],
+        },
+      });
+    }
+  };
 
   //   Custom cells
   const customCell = (args) => {
@@ -381,6 +461,7 @@ const ManageUsersComponent: React.FC = () => {
       backgroundColor: alpha("#cf2", theme.palette.action.hoverOpacity),
     },
   }));
+
   // Syncfusion - Custom toolbar
   const toolbarTemplate = () => {
     return (
@@ -481,51 +562,7 @@ const ManageUsersComponent: React.FC = () => {
               grid.current?.getSelectedRecords().length === 0
             }
             onClick={() => {
-              if (
-                exportType === "SelectedRows" &&
-                grid.current?.getSelectedRecords().length === 0
-              ) {
-                showSnackbar(t("Please select at least one row"), "error");
-              } else {
-                grid.current?.excelExport({
-                  dataSource: ExportData(exportType),
-                  fileName: `${t("States")}.xlsx`,
-                  header: {
-                    headerRows: 1,
-                    rows: [
-                      {
-                        cells: [
-                          {
-                            colSpan: 2,
-                            value: `Food Delivery Fleet Management System - ${t(
-                              "States"
-                            )}`,
-                            style: {
-                              hAlign: "Center",
-                              bold: true,
-                              fontColor: "#C67878",
-                            },
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  footer: {
-                    footerRows: 1,
-                    rows: [
-                      {
-                        cells: [
-                          {
-                            colSpan: 2,
-                            value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
-                            style: { hAlign: "Center", bold: true },
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                });
-              }
+              exportExcelPdf("excel");
             }}
           >
             {t("Export to Excel")}
@@ -543,43 +580,7 @@ const ManageUsersComponent: React.FC = () => {
               grid.current?.getSelectedRecords().length === 0
             }
             onClick={() => {
-              if (
-                exportType === "SelectedRows" &&
-                grid.current?.getSelectedRecords().length === 0
-              ) {
-                showSnackbar(t("Please select at least one row"), "error");
-              } else {
-                grid.current?.pdfExport({
-                  dataSource: ExportData(exportType),
-                  fileName: `${t("States")}.pdf`,
-                  header: {
-                    fromTop: 0,
-                    height: 130,
-                    contents: [
-                      {
-                        type: "Text",
-                        value: `Food Delivery Fleet Management System - ${t(
-                          "States"
-                        )}`,
-                        position: { x: 0, y: 50 },
-                        style: { textBrushColor: "#000000", fontSize: 14 },
-                      },
-                    ],
-                  },
-                  footer: {
-                    fromBottom: 0,
-                    height: 130,
-                    contents: [
-                      {
-                        type: "Text",
-                        value: `Generated ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
-                        position: { x: 0, y: 0 },
-                        style: { textBrushColor: "#000000", fontSize: 14 },
-                      },
-                    ],
-                  },
-                });
-              }
+              exportExcelPdf("pdf");
             }}
           >
             {t("Export to PDF")}
@@ -742,6 +743,8 @@ const ManageUsersComponent: React.FC = () => {
             selectedExportType={exportType}
             changeExportTypeOptions={exportOptions}
             changeExportType={changeExportType}
+            exportDetails={exportDetails}
+            switchExportDetails={switchExportDetails}
             selectedRole={role}
             roleOptions={roleOptions}
             changeRole={changeRole}

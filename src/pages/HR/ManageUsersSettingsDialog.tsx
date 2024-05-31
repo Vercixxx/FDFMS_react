@@ -9,6 +9,9 @@ import { useTranslation } from "react-i18next";
 
 // Theme
 import { ThemeContext } from "../../config/ThemeContext";
+import styled from "@emotion/styled";
+import Switch from "@mui/material/Switch";
+import { alpha } from "@mui/material";
 
 interface ManageUsersSettingsDialogProps {
   selectedPageSize: number;
@@ -17,6 +20,8 @@ interface ManageUsersSettingsDialogProps {
   selectedExportType: string;
   changeExportTypeOptions: any[];
   changeExportType: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  exportDetails: boolean;
+  switchExportDetails: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedRole: string;
   roleOptions: any[];
   changeRole: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -34,6 +39,8 @@ export const ManageUsersSettingsDialog: React.FC<
   selectedExportType,
   changeExportTypeOptions,
   changeExportType,
+  exportDetails,
+  switchExportDetails,
   selectedRole,
   roleOptions,
   changeRole,
@@ -89,6 +96,23 @@ export const ManageUsersSettingsDialog: React.FC<
             {t(option.text)}
           </MenuItem>
         ))}
+      </TextField>
+
+      {/* Export with details */}
+      <TextField
+        fullWidth
+        id="outlined-select-exportDetails"
+        select
+        label={t("Export with details")}
+        defaultValue={exportDetails.toString()}
+        onChange={switchExportDetails}
+      >
+        <MenuItem key={false} value={false}>
+          {t("No")}
+        </MenuItem>
+        <MenuItem key={true} value={true}>
+          {t("Yes")}
+        </MenuItem>
       </TextField>
 
       {/* User role */}

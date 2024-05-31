@@ -129,6 +129,7 @@ i18n
                     'Delete row': 'Delete row',
                     'Delete selected': 'Delete selected',
                     'Copied successfully': 'Copied successfully',
+                    'Export with details': 'Export with details',
                 },
             },
             PL: {
@@ -238,6 +239,7 @@ i18n
                     'Delete row': 'Usuń wiersz',
                     'Delete selected': 'Usuń zaznaczone',
                     'Copied successfully': 'Skopiowano',
+                    'Export with details': 'Eksportuj szczegółowo',
 
                 },
             },
