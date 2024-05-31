@@ -100,14 +100,13 @@ const ManageUsersComponent: React.FC = () => {
   });
 
   const fetchData = async () => {
-    const data = await getUsers(RequestParams.current);
-    if (data.type === "error") {
-      showSnackbar(data.message, "error");
-    } else {
-      console.log(data);
-
-      setResponse(data);
-    }
+    await getUsers(RequestParams.current)
+      .then((response) => {
+        setResponse(response);
+      })
+      .catch((error) => {
+        showSnackbar(error.message, "error");
+      });
   };
   useEffect(() => {
     fetchData();
@@ -249,8 +248,6 @@ const ManageUsersComponent: React.FC = () => {
     RequestParams.current.role = e.target.value;
     setRole(e.target.value);
     fetchData();
-    console.log(e.target.value);
-
     switch (e.target.value) {
       case "Driver":
         setColumns(DriverColumns);
@@ -329,14 +326,13 @@ const ManageUsersComponent: React.FC = () => {
     const [userDetails, setUserDetails] = useState({});
 
     const getUserData = async () => {
-      const response = await getUserDetails(props.username, props.user_role);
-      setUserDetails(response);
-
-      if (response.type === "error") {
-        showSnackbar(response.message, "error");
-      } else {
-        setUserDetails(response);
-      }
+      await getUserDetails(props.username, props.user_role)
+        .then((response) => {
+          setUserDetails(response);
+        })
+        .catch((error) => {
+          showSnackbar(error.message, "error");
+        });
     };
 
     React.useEffect(() => {
@@ -596,21 +592,143 @@ const ManageUsersComponent: React.FC = () => {
 
   // Context Menu
   const contextMenuItems = [
-    { text: t("Copy row"), target: ".e-content", id: "CopyRow" },
+    ...(grid.current?.getSelectedRecords().length === 1
+      ? [
+          {
+            text: t("Copy row"),
+            target: ".e-content",
+            id: "CopyRow",
+          },
+        ]
+      : []),
     { text: t("Copy selected"), target: ".e-content", id: "CopySelected" },
-    {
-      text: t("Export row to Excel"),
-      target: ".e-content",
-      id: "ExportRowToExcel",
-    },
-    {
-      text: t("Export row to PDF"),
-      target: ".e-content",
-      id: "ExportRowToPDF",
-    },
-    { text: t("Edit row"), target: ".e-content", id: "EditRow" },
-    { text: t("Delete row"), target: ".e-content", id: "DeleteRow" },
+
+    ...(grid.current?.getSelectedRecords().length === 1
+      ? [
+          {
+            text: t("Export row to Excel"),
+            target: ".e-content",
+            id: "ExportRowToExcel",
+          },
+        ]
+      : []),
+    ...(grid.current?.getSelectedRecords().length === 1
+      ? [
+          {
+            text: t("Export row to PDF"),
+            target: ".e-content",
+            id: "ExportRowToPDF",
+          },
+        ]
+      : []),
+    ...(grid.current?.getSelectedRecords().length === 1
+      ? [
+          {
+            text: t("Edit row"),
+            target: ".e-content",
+            id: "EditRow",
+          },
+        ]
+      : []),
+
+    ...(grid.current?.getSelectedRecords().length === 1
+      ? [
+          {
+            text: t("Delete row"),
+            target: ".e-content",
+            id: "DeleteRow",
+          },
+        ]
+      : []),
+    ...(grid.current?.getSelectedRecords().length > 1
+      ? [
+          {
+            text: t("Delete selected"),
+            target: ".e-content",
+            id: "DeletedSelected",
+          },
+        ]
+      : []),
   ];
+
+  const contextMenuClick = (args) => {
+    if (args.item.id === "CopyRow") {
+      const selectedRecords = grid.current?.getSelectedRecords();
+
+      if (selectedRecords && selectedRecords.length > 0) {
+        const userDetails = async () => {
+          return await getUserDetails(
+            selectedRecords[0].username,
+            selectedRecords[0].user_role
+          );
+        };
+
+        userDetails()
+          .then((record) => {
+            const formattedRecord = Object.entries(record)
+              .map(([key, value]) => `${key}: ${value}`)
+              .join(", ");
+
+            navigator.clipboard.writeText(formattedRecord);
+            showSnackbar(t("Copied successfully"), "success");
+          })
+          .catch((error) => {
+            showSnackbar(error.message, "error");
+          });
+      }
+    } else if (args.item.id === "CopySelected") {
+      const selectedRecords = grid.current?.getSelectedRecords();
+      if (selectedRecords && selectedRecords.length > 0) {
+        Promise.all(
+          selectedRecords.map((record) =>
+            getUserDetails(record.username, record.user_role)
+          )
+        )
+          .then((detailedRecords) => {
+            const formattedRecords = detailedRecords
+              .map((record) =>
+                Object.entries(record)
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join(", ")
+              )
+              .join("\n");
+
+            navigator.clipboard.writeText(formattedRecords);
+            showSnackbar(t("Copied successfully"), "success");
+          })
+          .catch((error) => {
+            showSnackbar(error.message, "error");
+          });
+      } else {
+        showSnackbar(t("Please select at least one row"), "error");
+      }
+    } else if (grid && args.item.id === "EditRow") {
+      const selectedRecord = grid.current?.getSelectedRecords();
+      if (selectedRecord && selectedRecord.length == 1) {
+        dispatch(
+          openDrawer({
+            title: "Edit State",
+            component: (
+              <DialogStateTemplate
+                refreshComponent={refreshComponent}
+                setRefreshComponent={setRefreshComponent}
+                data={selectedRecord[0]}
+              />
+            ),
+          })
+        );
+      } else if (selectedRecord && selectedRecord.length > 1) {
+        showSnackbar(t("Opration isn't allowed"), "error");
+      }
+    } else if (grid && args.item.id === "DeleteRow") {
+      const selectedRecord = grid.current?.getSelectedRecords();
+      if (selectedRecord && selectedRecord.length == 1) {
+        showDeleteConfirm(selectedRecord[0]);
+      } else if (selectedRecord && selectedRecord.length > 1) {
+        showSnackbar(t("Opration isn't allowed"), "error");
+      }
+    }
+  };
 
   const openSettingsDrawer = () => {
     dispatch(
@@ -688,7 +806,7 @@ const ManageUsersComponent: React.FC = () => {
 
       <GridComponent
         ref={grid as React.RefObject<GridComponent>}
-        allowSelection={manipulateMode ? true : false}
+        allowSelection={true}
         queryCellInfo={customCell}
         selectionSettings={selectionOptions}
         dataSource={response.results}
@@ -703,8 +821,8 @@ const ManageUsersComponent: React.FC = () => {
         allowMultiSorting={true}
         allowFiltering={true}
         // filterSettings={filterOptions}
-        contextMenuItems={contextMenuItems}
-        // contextMenuClick={contextMenuClick}
+        contextMenuItems={manipulateMode ? contextMenuItems : undefined}
+        contextMenuClick={manipulateMode ? contextMenuClick : undefined}
         rowSelected={(args) => {
           setSelectedRows(grid.current?.getSelectedRecords());
         }}
@@ -712,7 +830,6 @@ const ManageUsersComponent: React.FC = () => {
           setSelectedRows(grid.current?.getSelectedRecords());
         }}
         detailTemplate={manipulateMode ? undefined : detailsTemplate}
-        // detailTemplate={detailsTemplate}
       >
         <ColumnsDirective>
           {manipulateMode ? (

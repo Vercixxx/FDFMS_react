@@ -127,6 +127,8 @@ i18n
                     'Value': 'Value',
                     'Edit row': 'Edit row',
                     'Delete row': 'Delete row',
+                    'Delete selected': 'Delete selected',
+                    'Copied successfully': 'Copied successfully',
                 },
             },
             PL: {
@@ -234,6 +236,8 @@ i18n
                     'Value': 'Wartość',
                     'Edit row': 'Edytuj wiersz',
                     'Delete row': 'Usuń wiersz',
+                    'Delete selected': 'Usuń zaznaczone',
+                    'Copied successfully': 'Skopiowano',
 
                 },
             },
