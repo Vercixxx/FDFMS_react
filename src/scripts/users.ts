@@ -29,3 +29,6 @@ export const getUserDetails = async (username: string, user_role: string) => {
     }
 
 };
+
+export const AddUser = async (data: any) => {};
+export const EditUser = async (username: string, data: any) => {};

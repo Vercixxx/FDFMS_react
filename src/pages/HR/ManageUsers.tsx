@@ -26,13 +26,14 @@ import AddEditUserComponent from "./AddEditUser";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 // Mui
 import Button from "@mui/material/Button";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";
 import Pagination from "@mui/material/Pagination";
-import { Grid as MuiGrid } from "@mui/material";
+import { Menu, MenuItem, Grid as MuiGrid } from "@mui/material";
 
 // Syncfusion
 import {
@@ -63,6 +64,7 @@ import {
   EditFilled,
   PlusCircleFilled,
   DatabaseFilled,
+  DownloadOutlined,
 } from "@ant-design/icons";
 import {
   Stack,
@@ -317,6 +319,21 @@ const ManageUsersComponent: React.FC = () => {
     setExportDetails(e.target.value);
   };
 
+  // Export menu
+  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+  const [exportMenuAnchorEl, setExportMenuAnchorEl] =
+    React.useState<null | HTMLElement>(null);
+
+  const openExportMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setExportMenuAnchorEl(event.currentTarget);
+    setIsExportMenuOpen(true);
+  };
+
+  const closeExportMenu = () => {
+    setExportMenuAnchorEl(null);
+    setIsExportMenuOpen(false);
+  };
+
   // Export to excel
   const exportExcelPdf: any = (type: string) => {
     const exportData = ExportData(exportType);
@@ -498,14 +515,17 @@ const ManageUsersComponent: React.FC = () => {
             onClick={() => {
               dispatch(
                 openDrawer({
-                  title: t("Add State"),
+                  title: t("Add User"),
                   width: "700",
                   component: (
                     // <DialogStateTemplate
                     //   refreshComponent={refreshComponent}
                     //   setRefreshComponent={setRefreshComponent}
                     // />
-                    <AddEditUserComponent />
+                    <AddEditUserComponent
+                      refreshComponent={refreshComponent}
+                      setRefreshComponent={setRefreshComponent}
+                    />
                   ),
                 })
               );
@@ -528,7 +548,7 @@ const ManageUsersComponent: React.FC = () => {
               if (selectedRecord && selectedRecord.length == 1) {
                 dispatch(
                   openDrawer({
-                    title: t("Edit State"),
+                    title: t("Edit User"),
                     component: (
                       // <DialogStateTemplate
                       //   refreshComponent={refreshComponent}
@@ -566,45 +586,6 @@ const ManageUsersComponent: React.FC = () => {
             {selectedRows.length >= 1 ? ` ${selectedRows.length} ` : ""}
             {selectedRows.length === 1 ? `${t("Item")}` : ""}
             {selectedRows.length > 1 ? `${t("Items")}` : ""}
-          </Button>
-        </div>
-
-        <div className="flex justify-end space-x-4">
-          <Button
-            variant="text"
-            startIcon={<FileExcelFilled />}
-            className="hover:scale-105"
-            sx={{
-              borderRadius: "12px",
-            }}
-            color="info"
-            disabled={
-              exportType === "SelectedRows" &&
-              grid.current?.getSelectedRecords().length === 0
-            }
-            onClick={() => {
-              exportExcelPdf("excel");
-            }}
-          >
-            {t("Export to Excel")}
-          </Button>
-          <Button
-            variant="text"
-            startIcon={<FilePdfFilled />}
-            className="hover:scale-105"
-            sx={{
-              borderRadius: "12px",
-            }}
-            color="info"
-            disabled={
-              exportType === "SelectedRows" &&
-              grid.current?.getSelectedRecords().length === 0
-            }
-            onClick={() => {
-              exportExcelPdf("pdf");
-            }}
-          >
-            {t("Export to PDF")}
           </Button>
         </div>
       </div>
@@ -794,7 +775,7 @@ const ManageUsersComponent: React.FC = () => {
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
       <div className="flex justify-between">
         <div className="text-3xl mb-3">
-          {/* <LocationCityIcon style={{ fontSize: "40px" }} /> */}
+          <ManageAccountsIcon style={{ fontSize: "40px" }} />
           {t("Manage Users")}
         </div>
         <div className=""></div>
@@ -827,7 +808,7 @@ const ManageUsersComponent: React.FC = () => {
           </div>
 
           {/* Column selector */}
-          <div className="flex flex-col gap-3">
+          <div className="flex space-x-4 items-center">
             <Button
               startIcon={<SettingsIcon />}
               variant="text"
@@ -853,6 +834,47 @@ const ManageUsersComponent: React.FC = () => {
             >
               {t("Select columns")}
             </Button>
+            {manipulateMode ? (
+              <>
+                <Button
+                  id="export-button"
+                  aria-controls={isExportMenuOpen ? "export-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={isExportMenuOpen ? "true" : undefined}
+                  onClick={openExportMenu}
+                  startIcon={<DownloadOutlined />}
+                  className="hover:scale-105"
+                  sx={{
+                    borderRadius: "12px",
+                  }}
+                  disabled={selectedRows.length === 0}
+                >
+                  {t("Export")}
+                </Button>
+                <Menu
+                  id="export-menu"
+                  anchorEl={exportMenuAnchorEl}
+                  open={isExportMenuOpen}
+                  onClose={closeExportMenu}
+                  MenuListProps={{
+                    "aria-labelledby": "export-button",
+                  }}
+                >
+                  <MenuItem onClick={() => exportExcelPdf("excel")}>
+                    <div className="flex justify-between hover:scale-105">
+                      <FileExcelFilled className="me-2" />
+                      {t("Export to Excel")}
+                    </div>
+                  </MenuItem>
+                  <MenuItem onClick={() => exportExcelPdf("pdf")}>
+                    <div className="flex justify-between hover:scale-105">
+                      <FilePdfFilled className="me-2" />
+                      {t("Export to PDF")}
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : null}
           </div>
         </div>
 
