@@ -20,6 +20,8 @@ import { useTranslation } from "react-i18next";
 // Scripts
 import { QueryParams, getUsers, getUserDetails } from "../../scripts/users";
 
+import AddEditUserComponent from "./AddEditUser";
+
 // Icons
 import SettingsIcon from "@mui/icons-material/Settings";
 import CheckIcon from "@mui/icons-material/Check";
@@ -42,7 +44,7 @@ import {
   Inject,
   DetailRow,
   Page,
-  Toolbar,
+  ColumnChooser,
   ContextMenu,
   ExcelExport,
   PdfExport,
@@ -60,6 +62,7 @@ import {
   DeleteFilled,
   EditFilled,
   PlusCircleFilled,
+  DatabaseFilled,
 } from "@ant-design/icons";
 import {
   Stack,
@@ -316,9 +319,26 @@ const ManageUsersComponent: React.FC = () => {
 
   // Export to excel
   const exportExcelPdf: any = (type: string) => {
+    const exportData = ExportData(exportType);
+
+    if (exportDetails) {
+      if (exportData) {
+        const promises = exportData.map((data, index) =>
+          getUserDetails(data.username, data.user_role).then((response) => {
+            exportData[index] = response;
+          })
+        );
+
+        Promise.all(promises).catch((error) => {
+          showSnackbar(error.message, "error");
+        });
+      }
+    }
+    console.log(exportData);
+
     if (type === "excel") {
       grid.current?.excelExport({
-        dataSource: ExportData(exportType),
+        dataSource: exportData,
         fileName: `${t("Users")}.xlsx`,
         header: {
           headerRows: 1,
@@ -357,7 +377,7 @@ const ManageUsersComponent: React.FC = () => {
       });
     } else if (type === "pdf") {
       grid.current?.pdfExport({
-        dataSource: ExportData(exportType),
+        dataSource: grid.current?.dataSource,
         fileName: `${t("Users")}.pdf`,
         header: {
           fromTop: 0,
@@ -465,10 +485,10 @@ const ManageUsersComponent: React.FC = () => {
   // Syncfusion - Custom toolbar
   const toolbarTemplate = () => {
     return (
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between">
         <div className="flex justify-start space-x-4">
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<PlusCircleFilled />}
             className="hover:scale-105"
             sx={{
@@ -479,12 +499,13 @@ const ManageUsersComponent: React.FC = () => {
               dispatch(
                 openDrawer({
                   title: t("Add State"),
+                  width: "700",
                   component: (
                     // <DialogStateTemplate
                     //   refreshComponent={refreshComponent}
                     //   setRefreshComponent={setRefreshComponent}
                     // />
-                    <></>
+                    <AddEditUserComponent />
                   ),
                 })
               );
@@ -494,7 +515,7 @@ const ManageUsersComponent: React.FC = () => {
           </Button>
 
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<EditFilled />}
             disabled={selectedRows.length === 0 || selectedRows.length > 1}
             className="hover:scale-105"
@@ -514,7 +535,7 @@ const ManageUsersComponent: React.FC = () => {
                       //   setRefreshComponent={setRefreshComponent}
                       //   data={selectedRecord[0]}
                       // />
-                      <></>
+                      <AddEditUserComponent />
                     ),
                   })
                 );
@@ -525,7 +546,7 @@ const ManageUsersComponent: React.FC = () => {
           </Button>
 
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<DeleteFilled />}
             disabled={selectedRows.length === 0}
             className="hover:scale-105"
@@ -550,7 +571,7 @@ const ManageUsersComponent: React.FC = () => {
 
         <div className="flex justify-end space-x-4">
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<FileExcelFilled />}
             className="hover:scale-105"
             sx={{
@@ -568,7 +589,7 @@ const ManageUsersComponent: React.FC = () => {
             {t("Export to Excel")}
           </Button>
           <Button
-            variant="outlined"
+            variant="text"
             startIcon={<FilePdfFilled />}
             className="hover:scale-105"
             sx={{
@@ -766,6 +787,9 @@ const ManageUsersComponent: React.FC = () => {
     return <div>{toolbarTemplate()}</div>;
   };
 
+  // Column selector
+  const columnChooserSettings = { ignoreAccent: true };
+
   return (
     <div className={darkMode ? "dark-theme pe-4" : "light-theme pe-4"}>
       <div className="flex justify-between">
@@ -773,42 +797,73 @@ const ManageUsersComponent: React.FC = () => {
           {/* <LocationCityIcon style={{ fontSize: "40px" }} /> */}
           {t("Manage Users")}
         </div>
-        <div className="">
-          <Button
-            startIcon={<SettingsIcon />}
-            variant="outlined"
-            onClick={openSettingsDrawer}
-            className="hover:scale-105"
-          >
-            <div className="flex justify-between">{t("Settings")}</div>
-          </Button>
-        </div>
+        <div className=""></div>
       </div>
 
-      <div className="border-2 ps-2 pt-2 pb-2 pe-2 mb-3 inline-block">
-        <div className="text-2xl font-black text-center">
-          {t("Display mode")}
+      {/* Second row with display mode and column selector */}
+      <div className=" border-2 p-2 rounded-xl mb-4">
+        <div className="flex justify-between">
+          <div>
+            <div className="text-2xl font-black text-center">
+              {t("Display mode")}
+            </div>
+
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography>
+                <span className={manipulateMode ? "" : "font-black"}>
+                  {t("Detailed")}
+                </span>
+              </Typography>
+              <PinkSwitch
+                checked={manipulateMode}
+                onChange={switchDetailsMode}
+              />
+              <Typography>
+                <span className={manipulateMode ? "font-black" : ""}>
+                  {t("Manipulation")}
+                </span>
+              </Typography>
+            </Stack>
+          </div>
+
+          {/* Column selector */}
+          <div className="flex flex-col gap-3">
+            <Button
+              startIcon={<SettingsIcon />}
+              variant="text"
+              onClick={openSettingsDrawer}
+              className="hover:scale-105"
+              sx={{
+                borderRadius: "12px",
+              }}
+            >
+              {t("Settings")}
+            </Button>
+            <Button
+              variant="text"
+              startIcon={<DatabaseFilled />}
+              className="hover:scale-105"
+              sx={{
+                borderRadius: "12px",
+              }}
+              color="info"
+              onClick={() => {
+                grid.current.columnChooserModule.openColumnChooser();
+              }}
+            >
+              {t("Select columns")}
+            </Button>
+          </div>
         </div>
 
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography>
-            <span className={manipulateMode ? "" : "font-black"}>
-              {t("Detailed")}
-            </span>
-          </Typography>
-          <PinkSwitch checked={manipulateMode} onChange={switchDetailsMode} />
-          <Typography>
-            <span className={manipulateMode ? "font-black" : ""}>
-              {t("Manipulation")}
-            </span>
-          </Typography>
-        </Stack>
+        <div className="mt-4">
+          {manipulateMode ? <ManipulateMode /> : <DetailsMode />}
+        </div>
       </div>
-
-      {manipulateMode ? <ManipulateMode /> : <DetailsMode />}
 
       <GridComponent
         ref={grid as React.RefObject<GridComponent>}
+        emptyRecordTemplate={t("No records found")}
         allowSelection={true}
         queryCellInfo={customCell}
         selectionSettings={selectionOptions}
@@ -833,6 +888,8 @@ const ManageUsersComponent: React.FC = () => {
           setSelectedRows(grid.current?.getSelectedRecords());
         }}
         detailTemplate={manipulateMode ? undefined : detailsTemplate}
+        showColumnChooser={true}
+        columnChooserSettings={columnChooserSettings}
       >
         <ColumnsDirective>
           {manipulateMode ? (
@@ -843,6 +900,8 @@ const ManageUsersComponent: React.FC = () => {
               field={column.field}
               headerText={t(column.headerText)}
               textAlign={column.textAlign as TextAlign}
+              type={column.field === "date_joined" ? "datetime" : undefined}
+              format={column.field === "date_joined" ? "dd/MM/yyyy" : undefined}
             ></ColumnDirective>
           ))}
         </ColumnsDirective>
@@ -856,6 +915,7 @@ const ManageUsersComponent: React.FC = () => {
             Filter,
             ContextMenu,
             Edit,
+            ColumnChooser,
           ]}
         ></Inject>
       </GridComponent>

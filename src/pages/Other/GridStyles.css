@@ -84,6 +84,15 @@
   color: #000 !important;
 }
 
+/* No data */
+.light-theme .e-emptyrow {
+  background-color: #fff;
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
 /* Dark theme */
 .dark-theme .e-grid {
   transition: all 0.4s;
@@ -259,4 +268,13 @@
 .dark-theme .e-input-group input.e-input {
   background-color: #555;
   color: #fff;
+}
+
+/* No data */
+.dark-theme .e-emptyrow {
+  background-color: #555;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 }

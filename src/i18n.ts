@@ -35,6 +35,7 @@ i18n
                     'Opration isn\'t allowed': 'Opration isn\'t allowed',
                     'Field is obliatory': 'Field is obliatory',
                     Settings: 'Settings',
+                    'Table settings': 'Table settings',
                     'Save': 'Save',
                     'Update': 'Update',
                     'Cancel': 'Cancel',
@@ -130,6 +131,8 @@ i18n
                     'Delete selected': 'Delete selected',
                     'Copied successfully': 'Copied successfully',
                     'Export with details': 'Export with details',
+                    'Select columns': 'Select columns',
+                    'No records found': 'No records found',
                 },
             },
             PL: {
@@ -150,6 +153,7 @@ i18n
                     'Opration isn\'t allowed': 'Operacja niedozwolona',
                     'Field is obliatory': 'Pole jest obowiązkowe',
                     Settings: 'Ustawienia',
+                    'Table settings': 'Ustawienia tabeli',
                     'Save': 'Zapisz',
                     'Update': 'Aktualizuj',
                     'Cancel': 'Anuluj',
@@ -240,6 +244,8 @@ i18n
                     'Delete selected': 'Usuń zaznaczone',
                     'Copied successfully': 'Skopiowano',
                     'Export with details': 'Eksportuj szczegółowo',
+                    'Select columns': 'Wybierz kolumny',
+                    'No records found': 'Brak danych',
 
                 },
             },
