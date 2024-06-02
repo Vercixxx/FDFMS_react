@@ -156,6 +156,7 @@ i18n
                     'Residence Apartment Number': 'Residence Apartment Number',
                     'Select country': 'Select country',
                     'Select state': 'Select state',
+                    'Select country first': 'Select country first',
                 },
             },
             PL: {
@@ -292,6 +293,7 @@ i18n
                     'Residence Apartment Number': 'Numer mieszkania',
                     'Select country': 'Wybierz kraj',
                     'Select state': 'Wybierz województwo',
+                    'Select country first': 'Najpierw wybierz kraj',
 
                 },
             },

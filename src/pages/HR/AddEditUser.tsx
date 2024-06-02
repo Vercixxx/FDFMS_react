@@ -266,7 +266,8 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     handleSubmit,
     control,
     setValue,
-    formState: { errors, isDirty, isValid },
+    watch,
+    formState: { errors, isValid },
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -291,6 +292,8 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       residence_state: data?.residence_state || "",
     },
   });
+
+  const selectedCountry = watch("residence_country");
 
   //Form
   const [loading, setLoading] = React.useState(false);
@@ -414,68 +417,79 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
         </div>
 
         {/* Residence country & state */}
+        <div className="mb-5 mt-4 px-6">
+          <InputLabel id="country-select">
+            {t("Select country") + "*"}
+          </InputLabel>
+          <Controller
+            name="residence_country"
+            control={control}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="country-select"
+                id="residence_country"
+                label={t("Select country")}
+                sx={{ width: "100%" }}
+                error={Boolean(errors.residence_country)}
+              >
+                {Array.isArray(countries) &&
+                  countries.map((country) => (
+                    <MenuItem key={country.name} value={country.name}>
+                      {country.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            )}
+          />
+          <FormHelperText>
+            {errors.residence_country && (
+              <p className="text-red-600">{t("Field is obliatory")}</p>
+            )}
+          </FormHelperText>
+        </div>
 
-        <InputLabel id="country-select">{t("Select country") + "*"}</InputLabel>
-        <Controller
-          name="residence_country"
-          control={control}
-          defaultValue=""
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Select
-              {...field}
-              labelId="country-select"
-              id="residence_country"
-              label={t("Select country")}
-              sx={{ width: "100%" }}
-              error={Boolean(errors.residence_country)}
-            >
-              {Array.isArray(countries) &&
-                countries.map((country) => (
-                  <MenuItem key={country.name} value={country.name}>
-                    {country.name}
-                  </MenuItem>
-                ))}
-            </Select>
-          )}
-        />
-        <FormHelperText>
-          {errors.residence_country && (
-            <p className="text-red-600">{t("Field is obliatory")}</p>
-          )}
-        </FormHelperText>
-
-        <InputLabel id="residence_state-select">
-          {t("Select state") + "*"}
-        </InputLabel>
-        <Controller
-          name="residence_state"
-          control={control}
-          defaultValue=""
-          rules={{ required: true }}
-          render={({ field }) => (
-            <Select
-              {...field}
-              labelId="residence_state-select"
-              id="residence_state"
-              label={t("Select state")}
-              sx={{ width: "100%" }}
-              error={Boolean(errors.residence_state)}
-            >
-              {Array.isArray(states) &&
-                states.map((state) => (
-                  <MenuItem key={state.name} value={state.name}>
-                    {state.name}
-                  </MenuItem>
-                ))}
-            </Select>
-          )}
-        />
-        <FormHelperText>
-          {errors.residence_state && (
-            <p className="text-red-600">{t("Field is obliatory")}</p>
-          )}
-        </FormHelperText>
+        <div className="px-6">
+          <InputLabel id="residence_state-select">
+            {t("Select state") + "*"}
+          </InputLabel>
+          <Controller
+            name="residence_state"
+            control={control}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="residence_state-select"
+                id="residence_state"
+                label={t("Select state")}
+                sx={{ width: "100%" }}
+                error={Boolean(errors.residence_state)}
+                disabled={!selectedCountry}
+              >
+                {Array.isArray(states) &&
+                  states.map((state) => (
+                    <MenuItem key={state.name} value={state.name}>
+                      {state.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            )}
+          />
+          <FormHelperText>
+            {!selectedCountry && (
+              <p className="">{t("Select country first")}</p>
+            )}
+          </FormHelperText>
+          <FormHelperText>
+            {errors.residence_state && (
+              <p className="text-red-600">{t("Field is obliatory")}</p>
+            )}
+          </FormHelperText>
+        </div>
 
         {/* Residence country & state */}
 

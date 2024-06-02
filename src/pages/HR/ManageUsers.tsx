@@ -516,7 +516,7 @@ const ManageUsersComponent: React.FC = () => {
               dispatch(
                 openDrawer({
                   title: t("Add User"),
-                  width: "700",
+                  width: "1000",
                   component: (
                     // <DialogStateTemplate
                     //   refreshComponent={refreshComponent}
