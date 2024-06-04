@@ -38,12 +38,14 @@ import { Switch } from "@mui/material";
 interface AddEditUserComponentTemplateProps {
   refreshComponent: boolean;
   setRefreshComponent: (value: boolean) => void;
+  role?: string;
   data?: any;
 }
 
 const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
   refreshComponent,
   setRefreshComponent,
+  role,
   data,
 }) => {
   // Theme
@@ -56,6 +58,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
 
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
+
+  // Dispatch
+  const dispatch = useDispatch();
 
   // Get Countries
   const [countries, setCountries] = React.useState<any[]>([]);
@@ -96,6 +101,17 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       hint: "Username will be generated automatically",
+      disabled: true,
+      required: false,
+    },
+    user_role: {
+      id: "user_role",
+      name: "",
+      maxLength: 20,
+      format: /^[a-zA-Z]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      hint: "User class",
       disabled: true,
       required: false,
     },
@@ -277,7 +293,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
-      required: correspondenceAddressSameAsResidence ? false : true,
+      required: false,
     },
     correspondence_zip_code: {
       id: "correspondence_zip_code",
@@ -327,7 +343,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
-      required: registeredAddressSameAsResidence ? false : true,
+      required: false,
     },
     registered_zip_code: {
       id: "registered_zip_code",
@@ -344,6 +360,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
   //Basic information
   const basicInformationFields = [
     "username",
+    "user_role",
     "email",
     "first_name",
     "last_name",
@@ -405,7 +422,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       email: data?.email || "",
       first_name: data?.first_name || "",
       last_name: data?.last_name || "",
-      user_role: data?.user_role || "",
+      user_role: data?.user_role || role,
       status: data?.status || "",
       phone: data?.phone || "",
       pesel_nip: data?.pesel_nip || "",
@@ -504,7 +521,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
   return (
     <div className={darkMode ? "text-white" : "text-black"}>
       <form
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (d) => {
           // Copy from residence to correspondence
           if (correspondenceAddressSameAsResidence) {
             const fields = [
@@ -522,8 +539,6 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
               setValue(`correspondence_${field}`, residenceValue);
               trigger(`correspondence_${field}`);
             });
-
-            
           }
 
           // Copy from residence to registered
@@ -545,13 +560,25 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
             });
           }
 
-          console.log(data);
+          const userData = getValues();
+
           if (!data) {
-            // Create new user
+            dispatch(startLoading());
+            await AddUser(userData)
+              .then((response) => {
+                dispatch(stopLoading());
+                setRefreshComponent(!refreshComponent);
+                showSnackbar("User added successfully", "success");
+                dispatch(closeDrawer());
+              })
+              .catch((error) => {
+                dispatch(stopLoading());
+                showSnackbar(error, "error");
+              });
+            dispatch(stopLoading());
           } else {
+            console.log("Edit user");
           }
-
-
         })}
       >
         {/* ======================== Basic information ========================*/}

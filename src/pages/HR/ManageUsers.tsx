@@ -14,11 +14,19 @@ import { useDispatch } from "react-redux";
 import { openDrawer } from "../../store/drawerSlice";
 import { ManageUsersSettingsDialog } from "./ManageUsersSettingsDialog";
 
+// Delete Confirm Modal
+import DeleteConfirmModal from "../Other/ModalDelete";
+
 // i18n
 import { useTranslation } from "react-i18next";
 
 // Scripts
-import { QueryParams, getUsers, getUserDetails } from "../../scripts/users";
+import {
+  QueryParams,
+  getUsers,
+  getUserDetails,
+  DeleteUser,
+} from "../../scripts/users";
 
 import AddEditUserComponent from "./AddEditUser";
 
@@ -129,6 +137,13 @@ const ManageUsersComponent: React.FC = () => {
   // Drawer
   const dispatch = useDispatch();
   const [refreshComponent, setRefreshComponent] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (refreshComponent) {
+      fetchData();
+      setRefreshComponent(false);
+    }
+  }, [refreshComponent]);
 
   // Snackbars
   const { showSnackbar } = useSnackbarContext();
@@ -500,111 +515,10 @@ const ManageUsersComponent: React.FC = () => {
     },
   }));
 
-  // Syncfusion - Custom toolbar
-  const toolbarTemplate = () => {
-    return (
-      <div className="flex justify-between">
-        <div className="flex justify-start space-x-4">
-          <Button
-            variant="text"
-            startIcon={<PlusCircleFilled />}
-            className="hover:scale-105"
-            sx={{
-              borderRadius: "12px",
-            }}
-            color="success"
-            onClick={() => {
-              dispatch(
-                openDrawer({
-                  title: t("Add User"),
-                  width: "1000",
-                  component: (
-                    <AddEditUserComponent
-                      refreshComponent={refreshComponent}
-                      setRefreshComponent={setRefreshComponent}
-                    />
-                  ),
-                })
-              );
-            }}
-          >
-            {t("Add")}
-          </Button>
-
-          <Button
-            variant="text"
-            startIcon={<EditFilled />}
-            disabled={selectedRows.length === 0 || selectedRows.length > 1}
-            className="hover:scale-105"
-            sx={{
-              borderRadius: "12px",
-            }}
-            color="success"
-            onClick={() => {
-              const selectedRecord = grid.current?.getSelectedRecords();
-              let userData = {};
-              getUserDetails(
-                selectedRecord[0].username,
-                selectedRecord[0].user_role
-              )
-                .then((response) => {
-                  userData = response;
-                  console.log(userData);
-
-                  if (selectedRecord && selectedRecord.length == 1) {
-                    dispatch(
-                      openDrawer({
-                        title: t("Edit User"),
-                        width: "1000",
-                        component: (
-                          <AddEditUserComponent
-                            refreshComponent={refreshComponent}
-                            setRefreshComponent={setRefreshComponent}
-                            data={userData}
-                          />
-                        ),
-                      })
-                    );
-                  }
-                })
-                .catch((error) => {
-                  showSnackbar(error.message, "error");
-                });
-            }}
-          >
-            {t("Edit")}
-          </Button>
-
-          <Button
-            variant="text"
-            startIcon={<DeleteFilled />}
-            disabled={selectedRows.length === 0}
-            className="hover:scale-105"
-            sx={{
-              borderRadius: "12px",
-            }}
-            color="warning"
-            onClick={() => {
-              const selectedRecords = grid.current?.getSelectedRecords();
-              if (selectedRecords && selectedRecords.length > 0) {
-                showDeleteConfirm(selectedRecords[0]);
-              }
-            }}
-          >
-            {t("Delete")}
-
-            {selectedRows.length >= 1 ? ` ${selectedRows.length} ` : ""}
-            {selectedRows.length === 1 ? `${t("Item")}` : ""}
-            {selectedRows.length > 1 ? `${t("Items")}` : ""}
-          </Button>
-        </div>
-      </div>
-    );
-  };
   // =================== Grid ===================
 
   // Context Menu
-  const contextMenuItems = [
+  const contextMenuItems = [  
     ...(grid.current?.getSelectedRecords().length === 1
       ? [
           {
@@ -769,14 +683,87 @@ const ManageUsersComponent: React.FC = () => {
     );
   };
 
-  // Details mode
-  const DetailsMode = () => {
-    return <div></div>;
+  // Add user role
+  const [isAddUserRoleMenuOpen, setIsAddUserRoleMenuOpen] = useState(false);
+  const [addUserRoleMenuAnchorEl, setAddUserRoleMenuAnchorEl] =
+    React.useState<null | HTMLElement>(null);
+
+  const openAddUserRoleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAddUserRoleMenuAnchorEl(event.currentTarget);
+    setIsAddUserRoleMenuOpen(true);
   };
 
-  const ManipulateMode = () => {
-    return <div>{toolbarTemplate()}</div>;
+  const closeAddUserRoleMenu = () => {
+    setAddUserRoleMenuAnchorEl(null);
+    setIsAddUserRoleMenuOpen(false);
   };
+
+  const userRoles = ["HR", "Driver", "Manager", "Asset", "Payroll", "Clients"];
+
+  const addUserWithRole = (role: string): any => {
+    dispatch(
+      openDrawer({
+        title: t("Add") + " " + role,
+        width: "1000",
+        component: (
+          <AddEditUserComponent
+            refreshComponent={refreshComponent}
+            setRefreshComponent={setRefreshComponent}
+            role={role}
+          />
+        ),
+      })
+    );
+  };
+
+  // ============================ Delete ============================
+  // Syncfusion - Delete
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+  const [dialogDeleteData, setDialogDeleteData] = useState({
+    title: "",
+    content: "",
+    okText: "",
+    cancelText: "",
+    onOk: () => {},
+    onCancel: () => {},
+  });
+  const showDeleteConfirm = (items: any) => {
+    const selectedRecords = grid.current?.getSelectedRecords();
+    console.log(selectedRecords);
+    console.log(selectedRecords?.length);
+    
+    let title = "";
+    let content = "";
+    if (selectedRecords && selectedRecords.length === 1) {
+      title = t("Are you sure delete this item?");
+      content = `${items?.username || ""} ${t("will be deleted")}.`;
+    } else if (selectedRecords && selectedRecords.length > 1) {
+      const usernames = selectedRecords.map((record) => record.username);
+      title = t("Are you sure delete these items?");
+      content = `${usernames} ${t(" will be deleted")}.`;
+    }
+
+    setDialogDeleteData({
+      title: title,
+      content: content,
+      okText: t("Yes"),
+      cancelText: t("No"),
+      onOk: () => handleDelete(),
+      onCancel: () => {},
+    });
+    setDeleteDialogVisible(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await Promise.all(selectedRows.map((row) => DeleteUser(row.username)));
+      showSnackbar(t("Successfully deleted"), "success");
+    } catch (error) {
+      showSnackbar(t("Error while deleting, please try again"), "error");
+    }
+    fetchData();
+  };
+  // Syncfusion - Delete
 
   // Column selector
   const columnChooserSettings = { ignoreAccent: true };
@@ -889,7 +876,118 @@ const ManageUsersComponent: React.FC = () => {
         </div>
 
         <div className="mt-4">
-          {manipulateMode ? <ManipulateMode /> : <DetailsMode />}
+          {manipulateMode && (
+            <div className="flex justify-between">
+              <div className="flex justify-start space-x-4">
+                {/* Add user */}
+                <Button
+                  id="addUser-menu"
+                  aria-controls={
+                    isAddUserRoleMenuOpen ? "addUser-menu" : undefined
+                  }
+                  aria-haspopup="true"
+                  aria-expanded={isAddUserRoleMenuOpen ? "true" : undefined}
+                  onClick={openAddUserRoleMenu}
+                  startIcon={<PlusCircleFilled />}
+                  className="hover:scale-105"
+                  sx={{
+                    borderRadius: "12px",
+                  }}
+                  color="success"
+                >
+                  {t("Add")}
+                </Button>
+                <Menu
+                  id="addUser-menu"
+                  anchorEl={addUserRoleMenuAnchorEl}
+                  open={isAddUserRoleMenuOpen}
+                  onClose={closeAddUserRoleMenu}
+                  MenuListProps={{
+                    "aria-labelledby": "addUser-menu",
+                  }}
+                >
+                  {userRoles.map((role) => (
+                    <MenuItem onClick={() => addUserWithRole(role)}>
+                      <div className="flex justify-between hover:scale-105">
+                        {/* <PlusCircleFilled className="me-2" /> */}
+                        {t("Add")} {role}
+                      </div>
+                    </MenuItem>
+                  ))}
+                </Menu>
+                {/* Add user */}
+
+                <Button
+                  variant="text"
+                  startIcon={<EditFilled />}
+                  disabled={
+                    selectedRows.length === 0 || selectedRows.length > 1
+                  }
+                  className="hover:scale-105"
+                  sx={{
+                    borderRadius: "12px",
+                  }}
+                  color="success"
+                  onClick={() => {
+                    const selectedRecord = grid.current?.getSelectedRecords();
+                    let userData = {};
+                    getUserDetails(
+                      selectedRecord[0].username,
+                      selectedRecord[0].user_role
+                    )
+                      .then((response) => {
+                        userData = response;
+                        console.log(userData);
+
+                        if (selectedRecord && selectedRecord.length == 1) {
+                          dispatch(
+                            openDrawer({
+                              title: t("Edit User"),
+                              width: "1000",
+                              component: (
+                                <AddEditUserComponent
+                                  refreshComponent={refreshComponent}
+                                  setRefreshComponent={setRefreshComponent}
+                                  data={userData}
+                                />
+                              ),
+                            })
+                          );
+                        }
+                      })
+                      .catch((error) => {
+                        showSnackbar(error.message, "error");
+                      });
+                  }}
+                >
+                  {t("Edit")}
+                </Button>
+
+                <Button
+                  variant="text"
+                  startIcon={<DeleteFilled />}
+                  disabled={selectedRows.length === 0}
+                  className="hover:scale-105"
+                  sx={{
+                    borderRadius: "12px",
+                  }}
+                  color="warning"
+                  onClick={() => {
+                    const selectedRecords = grid.current?.getSelectedRecords();
+                    if (selectedRecords && selectedRecords.length > 0) {
+                      showDeleteConfirm(selectedRecords[0]);
+                    }
+                  }}
+                >
+                  {t("Delete")}
+
+                  {selectedRows.length >= 1 ? ` ${selectedRows.length} ` : ""}
+                  {selectedRows.length === 1 ? `${t("Item")}` : ""}
+                  {selectedRows.length > 1 ? `${t("Items")}` : ""}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -970,6 +1068,12 @@ const ManageUsersComponent: React.FC = () => {
           {t("Page")} {response.current_page} {t("of")} {response.total_pages}
         </MuiGrid>
       </MuiGrid>
+
+      <DeleteConfirmModal
+        dialogDeleteData={dialogDeleteData}
+        open={deleteDialogVisible}
+        setOpen={setDeleteDialogVisible}
+      />
     </div>
   );
 };

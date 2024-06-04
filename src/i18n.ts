@@ -173,6 +173,7 @@ i18n
                     'Registered Street': 'Registered Street',
                     'Registered House Number': 'Registered House Number',
                     'Registered Apartment Number': 'Registered Apartment Number',
+                    'User class': 'User class',
                 },
             },
             PL: {
@@ -184,7 +185,8 @@ i18n
                     Password: 'Hasło',
                     'Sign in': 'Zaloguj',
                     'Invalid credentials': 'Nieprawidłowe dane',
-                    'will be deleted': 'zostanie usunięty',
+                    'will be deleted': 'zostanie usunięty', 
+                    ' will be deleted': 'zostaną usunięte',
                     'items will be deleted': 'elementy/ów zostaną/nie usunięte',
                     'Are you sure?': 'Czy na pewno?',
                     'Are you sure delete these items?': 'Czy na pewno usunąć te elementy?',
@@ -326,6 +328,7 @@ i18n
                     'Registered Street': 'Ulica zameldowania',
                     'Registered House Number': 'Numer domu zameldowania',
                     'Registered Apartment Number': 'Numer mieszkania zameldowania',
+                    'User class': 'Klasa użytkownika',
 
 
                 },
