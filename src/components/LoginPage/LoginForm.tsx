@@ -71,6 +71,7 @@ const LoginForm = () => {
             placeholder={t("Username")}
             disabled={loading}
             prefix={<UserOutlined />}
+            autoComplete="username"
           />
         </ConfigProvider>
       </div>
@@ -85,6 +86,7 @@ const LoginForm = () => {
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
           }
+          autoComplete="current-password"
         />
       </div>
 

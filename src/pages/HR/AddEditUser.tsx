@@ -21,7 +21,7 @@ import { Controller } from "react-hook-form";
 
 // Scripts
 import { GetCountries } from "../../scripts/countries";
-import { GetStates } from "../../scripts/states";
+import { GetStatesForCountry } from "../../scripts/states";
 import { AddUser, EditUser } from "../../scripts/users";
 
 // Mui
@@ -33,6 +33,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 import FormHelperText from "@mui/material/FormHelperText";
 import Divider from "@mui/material/Divider";
+import { Switch } from "@mui/material";
 
 interface AddEditUserComponentTemplateProps {
   refreshComponent: boolean;
@@ -67,27 +68,34 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
   }, []);
   // Get Countries
 
-  // Get States
-  const [states, setStates] = React.useState<any[]>([]);
-  const fetchStates = async () => {
-    const data = await GetStates();
-    setStates(data);
+  // Correspondence Address
+  const [
+    correspondenceAddressSameAsResidence,
+    setCorrespondenceAddressSameAsResidence,
+  ] = React.useState(data ? false : true);
+  const switchCorrespondenceAddress = (event, checked) => {
+    setCorrespondenceAddressSameAsResidence(checked);
   };
-  React.useEffect(() => {
-    fetchStates();
-  }, []);
-  // Get States
+
+  // Registered Address
+  const [
+    registeredAddressSameAsResidence,
+    setRegisteredAddressSameAsResidence,
+  ] = React.useState(data ? false : true);
+  const switchRegisteredAddress = (event, checked) => {
+    setRegisteredAddressSameAsResidence(checked);
+  };
 
   //Fields configuration
   const fieldsConfig = {
     username: {
       id: "username",
-      name: "Username",
-      maxLength: 2,
-      format: /^[a-zA-Z0-9_]*$/,
+      name: "",
+      maxLength: 9,
+      format: /^[a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
-      hint: "Username is filled automatically",
+      hint: "Username will be generated automatically",
       disabled: true,
       required: false,
     },
@@ -105,7 +113,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "first_name",
       name: "First Name",
       maxLength: 100,
-      format: /^[a-zA-Z ]*$/,
+      format: /^[a-zA-Z ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
@@ -115,7 +123,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "last_name",
       name: "Last Name",
       maxLength: 100,
-      format: /^[a-zA-Z ]*$/,
+      format: /^[a-zA-Z ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
@@ -155,7 +163,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "tax_office_address",
       name: "Tax Office Address",
       maxLength: 100,
-      format: /^[a-zA-Z ]*$/,
+      format: /^[a-zA-Z0-9 -]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
@@ -195,17 +203,17 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "residence_street",
       name: "Residence Street",
       maxLength: 100,
-      format: /^[a-zA-Z ]*$/,
+      format: /^[a-zA-Z0-9]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
       required: true,
     },
-    residence_house_number: {
-      id: "residence_house_number",
+    residence_home_number: {
+      id: "residence_home_number",
       name: "Residence House Number",
       maxLength: 10,
-      format: /^[0-9]*$/,
+      format: /^[0-9a-zA-Z]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
@@ -215,7 +223,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "residence_apartment_number",
       name: "Residence Apartment Number",
       maxLength: 10,
-      format: /^[0-9]*$/,
+      format: /^[0-9a-zA-Z]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
@@ -225,11 +233,111 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       id: "residence_zip_code",
       name: "Residence Postal Code",
       maxLength: 6,
-      format: /^[0-9]*$/,
+      format: /^[0-9-]*$/,
       style: { width: "46%", marginTop: "2rem" },
       variant: "outlined",
       disabled: false,
       required: true,
+    },
+    correspondence_city: {
+      id: "correspondence_city",
+      name: "Correspondence City",
+      maxLength: 100,
+      format: /^[a-zA-Z ]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: correspondenceAddressSameAsResidence ? false : true,
+    },
+    correspondence_street: {
+      id: "correspondence_street",
+      name: "Correspondence Street",
+      maxLength: 100,
+      format: /^[a-zA-Z0-9]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: correspondenceAddressSameAsResidence ? false : true,
+    },
+    correspondence_home_number: {
+      id: "correspondence_home_number",
+      name: "Correspondence House Number",
+      maxLength: 10,
+      format: /^[0-9a-zA-Z]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: correspondenceAddressSameAsResidence ? false : true,
+    },
+    correspondence_apartment_number: {
+      id: "correspondence_apartment_number",
+      name: "Correspondence Apartment Number",
+      maxLength: 10,
+      format: /^[0-9a-zA-Z]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: correspondenceAddressSameAsResidence ? false : true,
+    },
+    correspondence_zip_code: {
+      id: "correspondence_zip_code",
+      name: "Correspondence Postal Code",
+      maxLength: 6,
+      format: /^[0-9-]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: correspondenceAddressSameAsResidence ? false : true,
+    },
+    registered_city: {
+      id: "registered_city",
+      name: "Registered City",
+      maxLength: 100,
+      format: /^[a-zA-Z ]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: registeredAddressSameAsResidence ? false : true,
+    },
+    registered_street: {
+      id: "registered_street",
+      name: "Registered Street",
+      maxLength: 100,
+      format: /^[a-zA-Z0-9]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: registeredAddressSameAsResidence ? false : true,
+    },
+    registered_home_number: {
+      id: "registered_home_number",
+      name: "Registered House Number",
+      maxLength: 10,
+      format: /^[0-9a-zA-Z]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: registeredAddressSameAsResidence ? false : true,
+    },
+    registered_apartment_number: {
+      id: "registered_apartment_number",
+      name: "Registered Apartment Number",
+      maxLength: 10,
+      format: /^[0-9a-zA-Z]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: registeredAddressSameAsResidence ? false : true,
+    },
+    registered_zip_code: {
+      id: "registered_zip_code",
+      name: "Registered Postal Code",
+      maxLength: 6,
+      format: /^[0-9-]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: registeredAddressSameAsResidence ? false : true,
     },
   };
 
@@ -255,45 +363,140 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
   const residenceAddressFields = [
     "residence_city",
     "residence_street",
-    "residence_house_number",
+    "residence_home_number",
     "residence_apartment_number",
     "residence_zip_code",
   ];
 
-  //Controller
+  // Correspondence address
+  const correspondenceAddressFields = [
+    "correspondence_city",
+    "correspondence_street",
+    "correspondence_home_number",
+    "correspondence_apartment_number",
+    "correspondence_zip_code",
+  ];
+
+  // Registered address
+  const registeredAddressFields = [
+    "registered_city",
+    "registered_street",
+    "registered_home_number",
+    "registered_apartment_number",
+    "registered_zip_code",
+  ];
+
+  // ======================================== Controller ========================================
   const {
     register,
     handleSubmit,
     control,
     setValue,
     watch,
+    trigger,
+    getValues,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "all",
+    shouldUnregister: true,
+    criteriaMode: "all",
     defaultValues: {
       username: data?.username || "",
       email: data?.email || "",
       first_name: data?.first_name || "",
       last_name: data?.last_name || "",
-      role: data?.role || "",
+      user_role: data?.user_role || "",
       status: data?.status || "",
       phone: data?.phone || "",
-      pesel: data?.pesel || "",
+      pesel_nip: data?.pesel_nip || "",
       tax_office_name: data?.tax_office_name || "",
       tax_office_address: data?.tax_office_address || "",
       nfz: data?.nfz || "",
       bank_account_number: data?.bank_account_number || "",
       residence_city: data?.residence_city || "",
       residence_street: data?.residence_street || "",
-      residence_house_number: data?.residence_house_number || "",
+      residence_home_number: data?.residence_home_number || "",
       residence_apartment_number: data?.residence_apartment_number || "",
       residence_zip_code: data?.residence_zip_code || "",
       residence_country: data?.residence_country || "",
-      residence_state: data?.residence_state || "",
+      residence_state: data?.residence_state.split("(")[0].trim() || "",
+      correspondence_city: data?.correspondence_city || "",
+      correspondence_street: data?.correspondence_street || "",
+      correspondence_home_number: data?.correspondence_home_number || "",
+      correspondence_apartment_number:
+        data?.correspondence_apartment_number || "",
+      correspondence_zip_code: data?.correspondence_zip_code || "",
+      correspondence_country: data?.correspondence_country || "",
+      correspondence_state:
+        data?.correspondence_state.split("(")[0].trim() || "",
+      registered_city: data?.registered_city || "",
+      registered_street: data?.registered_street || "",
+      registered_home_number: data?.registered_home_number || "",
+      registered_apartment_number: data?.registered_apartment_number || "",
+      registered_zip_code: data?.registered_zip_code || "",
+      registered_country: data?.registered_country || "",
+      registered_state: data?.registered_state.split("(")[0].trim() || "",
     },
   });
 
-  const selectedCountry = watch("residence_country");
+  // ======================================== Residence ========================================
+  const residenceSelectedCountry = watch("residence_country");
+
+  // Get Residence States
+  const [residenceStates, setResidenceStates] = React.useState<any[]>([]);
+  const fetchStates = async () => {
+    const data = await GetStatesForCountry(residenceSelectedCountry);
+    setResidenceStates(data);
+  };
+  React.useEffect(() => {
+    fetchStates();
+  }, [residenceSelectedCountry]);
+  // Get Residence States
+
+  // ======================================== Correspondence ========================================
+  const correspondenceSelectedCountry = watch("correspondence_country");
+
+  // Get States
+  const [correspondenceStates, setCorrespondenceStates] = React.useState<any[]>(
+    []
+  );
+  const fetchCorrespondenceStates = async () => {
+    const data = await GetStatesForCountry(correspondenceSelectedCountry);
+    setCorrespondenceStates(data);
+  };
+  React.useEffect(() => {
+    fetchCorrespondenceStates();
+  }, [correspondenceSelectedCountry]);
+
+  // ======================================== Registered ========================================
+  const registeredSelectedCountry = watch("registered_country");
+  const [registeredStates, setRegisteredStates] = React.useState<any[]>([]);
+  const fetchRegisteredStates = async () => {
+    const data = await GetStatesForCountry(registeredSelectedCountry);
+    setRegisteredStates(data);
+  };
+  React.useEffect(() => {
+    fetchRegisteredStates();
+  }, [registeredSelectedCountry]);
+
+  // ======================================== Generate Username ========================================
+  const firstName = watch("first_name");
+  const lastName = watch("last_name");
+
+  function generateUsername(firstName: string, lastName: string): string {
+    const firstPart = firstName.substr(0, 3);
+    const secondPart = lastName.substr(0, 3);
+    const thirdPart = Math.floor(Math.random() * 900) + 100;
+    return firstPart + secondPart + thirdPart;
+  }
+
+  React.useEffect(() => {
+    if (firstName && lastName && !data) {
+      const newUsername = generateUsername(firstName, lastName);
+      setValue("username", newUsername);
+      trigger("username");
+    }
+  }, [firstName, lastName]);
 
   //Form
   const [loading, setLoading] = React.useState(false);
@@ -302,13 +505,53 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     <div className={darkMode ? "text-white" : "text-black"}>
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+          // Copy from residence to correspondence
+          if (correspondenceAddressSameAsResidence) {
+            const fields = [
+              "city",
+              "street",
+              "home_number",
+              "apartment_number",
+              "zip_code",
+              "country",
+              "state",
+            ];
 
-          //   if (stateData) {
-          //     editState(stateData, data);
-          //   } else {
-          //     addNewState(data);
-          //   }
+            fields.forEach((field) => {
+              const residenceValue = getValues(`residence_${field}`);
+              setValue(`correspondence_${field}`, residenceValue);
+              trigger(`correspondence_${field}`);
+            });
+
+            
+          }
+
+          // Copy from residence to registered
+          if (registeredAddressSameAsResidence) {
+            const fields = [
+              "city",
+              "street",
+              "home_number",
+              "apartment_number",
+              "zip_code",
+              "country",
+              "state",
+            ];
+
+            fields.forEach((field) => {
+              const residenceValue = getValues(`residence_${field}`);
+              setValue(`registered_${field}`, residenceValue);
+              trigger(`registered_${field}`);
+            });
+          }
+
+          console.log(data);
+          if (!data) {
+            // Create new user
+          } else {
+          }
+
+
         })}
       >
         {/* ======================== Basic information ========================*/}
@@ -329,7 +572,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                       <TextField
                         key={fieldName}
                         id={`${fieldConfig.id}-input`}
-                        label={t(fieldConfig.name) + "*"}
+                        label={
+                          fieldConfig.name ? t(fieldConfig.name) + "*" : null
+                        }
                         variant={fieldConfig.variant as any}
                         style={fieldConfig.style}
                         error={errors[fieldConfig.id] ? true : false}
@@ -337,7 +582,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                         helperText={
                           errors[fieldConfig.id]
                             ? errors[fieldConfig.id].message
-                            : fieldConfig.hint || null
+                            : t(fieldConfig.hint) || null
                         }
                         {...register(fieldConfig.id, {
                           required: {
@@ -468,10 +713,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                 label={t("Select state")}
                 sx={{ width: "100%" }}
                 error={Boolean(errors.residence_state)}
-                disabled={!selectedCountry}
+                disabled={
+                  !residenceSelectedCountry || residenceStates.length === 0
+                }
               >
-                {Array.isArray(states) &&
-                  states.map((state) => (
+                {Array.isArray(residenceStates) &&
+                  residenceStates.map((state) => (
                     <MenuItem key={state.name} value={state.name}>
                       {state.name}
                     </MenuItem>
@@ -480,10 +727,16 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
             )}
           />
           <FormHelperText>
-            {!selectedCountry && (
+            {!residenceSelectedCountry && (
               <p className="">{t("Select country first")}</p>
             )}
+            {residenceStates && residenceStates.length === 0 && (
+              <p className="text-red-600">
+                {t("There are no states for the selected country")}
+              </p>
+            )}
           </FormHelperText>
+
           <FormHelperText>
             {errors.residence_state && (
               <p className="text-red-600">{t("Field is obliatory")}</p>
@@ -537,7 +790,307 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
             );
           })}
         {/* ======================== Residence Address ========================*/}
-        {isValid.toString()}
+
+        {/* ======================== Correspondence Address ========================*/}
+        <div className="text-center text-xl font-black mt-10">
+          <Divider> {t("Correspondence Address")} </Divider>
+        </div>
+        <div className="text-center text-xl mt-10">
+          {t("Same as residence")}{" "}
+          <Switch
+            checked={correspondenceAddressSameAsResidence}
+            onChange={switchCorrespondenceAddress}
+            color="success"
+          />
+        </div>
+
+        {!correspondenceAddressSameAsResidence && (
+          <div>
+            {/* Correspondence country & state */}
+            <div className="mb-5 mt-4 px-6">
+              <InputLabel id="country-select">
+                {t("Select country") + "*"}
+              </InputLabel>
+              <Controller
+                name="correspondence_country"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="country-select"
+                    id="correspondence_country"
+                    label={t("Select country")}
+                    sx={{ width: "100%" }}
+                    error={Boolean(errors.correspondence_country)}
+                  >
+                    {Array.isArray(countries) &&
+                      countries.map((country) => (
+                        <MenuItem key={country.name} value={country.name}>
+                          {country.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              <FormHelperText>
+                {errors.correspondence_country && (
+                  <p className="text-red-600">{t("Field is obliatory")}</p>
+                )}
+              </FormHelperText>
+            </div>
+
+            <div className="px-6">
+              <InputLabel id="correspondence_state-select">
+                {t("Select state") + "*"}
+              </InputLabel>
+              <Controller
+                name="correspondence_state"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="correspondence_state-select"
+                    id="correspondence_state"
+                    label={t("Select state")}
+                    sx={{ width: "100%" }}
+                    error={Boolean(errors.correspondence_state)}
+                    disabled={
+                      !correspondenceSelectedCountry ||
+                      correspondenceStates.length === 0
+                    }
+                  >
+                    {Array.isArray(correspondenceStates) &&
+                      correspondenceStates.map((state) => (
+                        <MenuItem key={state.name} value={state.name}>
+                          {state.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              <FormHelperText>
+                {!correspondenceSelectedCountry && (
+                  <p className="">{t("Select country first")}</p>
+                )}
+                {correspondenceStates && correspondenceStates.length === 0 && (
+                  <p className="text-red-600">
+                    {t("There are no states for the selected country")}
+                  </p>
+                )}
+              </FormHelperText>
+
+              <FormHelperText>
+                {errors.correspondence_state && (
+                  <p className="text-red-600">{t("Field is obliatory")}</p>
+                )}
+              </FormHelperText>
+            </div>
+
+            {/* Correspondence country & state */}
+            {Array(Math.ceil(correspondenceAddressFields.length / 2))
+              .fill(0)
+              .map((_, i) => {
+                const fieldNames = correspondenceAddressFields.slice(
+                  i * 2,
+                  i * 2 + 2
+                );
+                return (
+                  <div className="flex justify-evenly" key={i}>
+                    {fieldNames.map((fieldName) => {
+                      const fieldConfig = fieldsConfig[fieldName];
+                      if (!fieldConfig) return null;
+                      return (
+                        <TextField
+                          key={fieldName}
+                          id={`${fieldConfig.id}-input`}
+                          label={t(fieldConfig.name) + "*"}
+                          variant={fieldConfig.variant as any}
+                          style={fieldConfig.style}
+                          error={errors[fieldConfig.id] ? true : false}
+                          disabled={fieldConfig.disabled}
+                          helperText={
+                            errors[fieldConfig.id]
+                              ? errors[fieldConfig.id].message
+                              : fieldConfig.hint || null
+                          }
+                          {...register(fieldConfig.id, {
+                            required: {
+                              value: fieldConfig.required,
+                              message: `${t("Field is required")}`,
+                            },
+                            maxLength: {
+                              value: fieldConfig.maxLength,
+                              message: ` ${t("Field is too long")}`,
+                            },
+                            pattern: {
+                              value: fieldConfig.format,
+                              message: `${t("Field format is invalid")}`,
+                            },
+                          })}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })}
+          </div>
+        )}
+        {/* ======================== Correspondence Address ========================*/}
+
+        {/* ======================== Registered Address ========================*/}
+        <div className="text-center text-xl font-black mt-10">
+          <Divider> {t("Registered Address")} </Divider>
+        </div>
+        <div className="text-center text-xl mt-10">
+          {t("Same as residence")}{" "}
+          <Switch
+            checked={registeredAddressSameAsResidence}
+            onChange={switchRegisteredAddress}
+            color="success"
+          />
+        </div>
+        {!registeredAddressSameAsResidence && (
+          <div>
+            {/* Registered country & state */}
+            <div className="mb-5 mt-4 px-6">
+              <InputLabel id="country-select">
+                {t("Select country") + "*"}
+              </InputLabel>
+              <Controller
+                name="registered_country"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="country-select"
+                    id="registered_country"
+                    label={t("Select country")}
+                    sx={{ width: "100%" }}
+                    error={Boolean(errors.registered_country)}
+                  >
+                    {Array.isArray(countries) &&
+                      countries.map((country) => (
+                        <MenuItem key={country.name} value={country.name}>
+                          {country.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              <FormHelperText>
+                {errors.registered_country && (
+                  <p className="text-red-600">{t("Field is obliatory")}</p>
+                )}
+              </FormHelperText>
+            </div>
+
+            <div className="px-6">
+              <InputLabel id="registered_state-select">
+                {t("Select state") + "*"}
+              </InputLabel>
+              <Controller
+                name="registered_state"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="registered_state-select"
+                    id="registered_state"
+                    label={t("Select state")}
+                    sx={{ width: "100%" }}
+                    error={Boolean(errors.registered_state)}
+                    disabled={
+                      !registeredSelectedCountry ||
+                      registeredStates.length === 0
+                    }
+                  >
+                    {Array.isArray(registeredStates) &&
+                      registeredStates.map((state) => (
+                        <MenuItem key={state.name} value={state.name}>
+                          {state.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+              <FormHelperText>
+                {!registeredSelectedCountry && (
+                  <p className="">{t("Select country first")}</p>
+                )}
+                {registeredStates && registeredStates.length === 0 && (
+                  <p className="text-red-600">
+                    {t("There are no states for the selected country")}
+                  </p>
+                )}
+              </FormHelperText>
+
+              <FormHelperText>
+                {errors.registered_state && (
+                  <p className="text-red-600">{t("Field is obliatory")}</p>
+                )}
+              </FormHelperText>
+            </div>
+
+            {/* Registered country & state */}
+            {Array(Math.ceil(registeredAddressFields.length / 2))
+              .fill(0)
+              .map((_, i) => {
+                const fieldNames = registeredAddressFields.slice(
+                  i * 2,
+                  i * 2 + 2
+                );
+                return (
+                  <div className="flex justify-evenly" key={i}>
+                    {fieldNames.map((fieldName) => {
+                      const fieldConfig = fieldsConfig[fieldName];
+                      if (!fieldConfig) return null;
+                      return (
+                        <TextField
+                          key={fieldName}
+                          id={`${fieldConfig.id}-input`}
+                          label={t(fieldConfig.name) + "*"}
+                          variant={fieldConfig.variant as any}
+                          style={fieldConfig.style}
+                          error={errors[fieldConfig.id] ? true : false}
+                          disabled={fieldConfig.disabled}
+                          helperText={
+                            errors[fieldConfig.id]
+                              ? errors[fieldConfig.id].message
+                              : fieldConfig.hint || null
+                          }
+                          {...register(fieldConfig.id, {
+                            required: {
+                              value: fieldConfig.required,
+                              message: `${t("Field is required")}`,
+                            },
+                            maxLength: {
+                              value: fieldConfig.maxLength,
+                              message: ` ${t("Field is too long")}`,
+                            },
+                            pattern: {
+                              value: fieldConfig.format,
+                              message: `${t("Field format is invalid")}`,
+                            },
+                          })}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })}
+          </div>
+        )}
+
+        {/* ======================== Registered Address ========================*/}
+
         <div className="my-4" align="center">
           <LoadingButton
             loading={loading}
@@ -547,7 +1100,7 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
             type="submit"
             color="success"
             sx={{ width: "50%" }}
-            disabled={!isValid || Object.keys(errors).length > 0}
+            disabled={!isValid}
           >
             {data ? t("Update") : t("Save")}
           </LoadingButton>

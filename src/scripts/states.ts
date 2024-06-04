@@ -53,3 +53,14 @@ export const EditState = async (id: number, data: IState) => {
         return false;
     }
 }
+
+
+export const GetStatesForCountry = async (country: string) => {
+    try {
+        const response = await axios.get(`api/states/get/?country=${country}`);
+        return response.data;
+        
+    } catch (error) {
+        return false;
+    }
+}

@@ -422,6 +422,7 @@ const ManageUsersComponent: React.FC = () => {
         },
       });
     }
+    showSnackbar(t("Exported successfully"), "info");
   };
 
   //   Custom cells
@@ -518,10 +519,6 @@ const ManageUsersComponent: React.FC = () => {
                   title: t("Add User"),
                   width: "1000",
                   component: (
-                    // <DialogStateTemplate
-                    //   refreshComponent={refreshComponent}
-                    //   setRefreshComponent={setRefreshComponent}
-                    // />
                     <AddEditUserComponent
                       refreshComponent={refreshComponent}
                       setRefreshComponent={setRefreshComponent}
@@ -545,21 +542,34 @@ const ManageUsersComponent: React.FC = () => {
             color="success"
             onClick={() => {
               const selectedRecord = grid.current?.getSelectedRecords();
-              if (selectedRecord && selectedRecord.length == 1) {
-                dispatch(
-                  openDrawer({
-                    title: t("Edit User"),
-                    component: (
-                      // <DialogStateTemplate
-                      //   refreshComponent={refreshComponent}
-                      //   setRefreshComponent={setRefreshComponent}
-                      //   data={selectedRecord[0]}
-                      // />
-                      <AddEditUserComponent />
-                    ),
-                  })
-                );
-              }
+              let userData = {};
+              getUserDetails(
+                selectedRecord[0].username,
+                selectedRecord[0].user_role
+              )
+                .then((response) => {
+                  userData = response;
+                  console.log(userData);
+
+                  if (selectedRecord && selectedRecord.length == 1) {
+                    dispatch(
+                      openDrawer({
+                        title: t("Edit User"),
+                        width: "1000",
+                        component: (
+                          <AddEditUserComponent
+                            refreshComponent={refreshComponent}
+                            setRefreshComponent={setRefreshComponent}
+                            data={userData}
+                          />
+                        ),
+                      })
+                    );
+                  }
+                })
+                .catch((error) => {
+                  showSnackbar(error.message, "error");
+                });
             }}
           >
             {t("Edit")}
