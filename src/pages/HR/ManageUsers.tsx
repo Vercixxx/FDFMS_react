@@ -729,9 +729,7 @@ const ManageUsersComponent: React.FC = () => {
   });
   const showDeleteConfirm = (items: any) => {
     const selectedRecords = grid.current?.getSelectedRecords();
-    console.log(selectedRecords);
-    console.log(selectedRecords?.length);
-    
+
     let title = "";
     let content = "";
     if (selectedRecords && selectedRecords.length === 1) {

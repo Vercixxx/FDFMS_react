@@ -6,6 +6,7 @@
 .light-theme .e-grid .e-row:hover .e-rowcell {
   cursor: pointer;
   background-color: rgba(50, 200, 180, 0.6) !important;
+  font-weight: bold;
 }
 .light-theme .e-grid .e-rowcell.e-selectionbackground {
   background-color: rgba(25, 200, 180, 0.8) !important;
@@ -107,6 +108,7 @@
   color: #fff !important;
   background-color: rgba(50, 200, 180, 0.6) !important;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .dark-theme .e-grid .e-rowcell.e-selectionbackground {
