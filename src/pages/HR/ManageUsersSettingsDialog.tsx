@@ -106,6 +106,7 @@ export const ManageUsersSettingsDialog: React.FC<
         label={t("Export with details")}
         defaultValue={exportDetails.toString()}
         onChange={switchExportDetails}
+        disabled={true}
       >
         <MenuItem key={false} value={false}>
           {t("No")}

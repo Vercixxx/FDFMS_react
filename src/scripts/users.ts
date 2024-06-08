@@ -41,7 +41,14 @@ export const AddUser = async (data: any) => {
     }
 
 };
-export const EditUser = async (username: string, data: any) => {};
+export const EditUser = async (username: string, user_role: string, data: any) => {
+    try {
+        const response = await axios.put(`api/users/save/${username}/${user_role}/`, data);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.message || 'Error while fetching data, please try again');
+    }
+};
 
 
 export const DeleteUser = async (username: string) => {

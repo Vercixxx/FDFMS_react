@@ -577,7 +577,19 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
               });
             dispatch(stopLoading());
           } else {
-            console.log("Edit user");
+            dispatch(startLoading());
+            await EditUser(userData.username, userData.user_role, userData)
+              .then((response) => {
+                dispatch(stopLoading());
+                setRefreshComponent(!refreshComponent);
+                showSnackbar("User edited successfully", "success");
+                dispatch(closeDrawer());
+              })
+              .catch((error) => {
+                dispatch(stopLoading());
+                showSnackbar(error, "error");
+              })
+              dispatch(stopLoading());
           }
         })}
       >

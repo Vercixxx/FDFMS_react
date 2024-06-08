@@ -113,10 +113,17 @@ const ManageUsersComponent: React.FC = () => {
     results: [],
   });
 
+  const [fetchedColumns, setFetchedColumns] = useState([]);
+
   const fetchData = async () => {
     await getUsers(RequestParams.current)
       .then((response) => {
         setResponse(response);
+        if (response.results.length > 0) {
+          Object.entries(response.results[0]).map(([key, value]) => {
+            console.log(`${key}`);
+          });
+        }
       })
       .catch((error) => {
         showSnackbar(error.message, "error");
@@ -518,7 +525,7 @@ const ManageUsersComponent: React.FC = () => {
   // =================== Grid ===================
 
   // Context Menu
-  const contextMenuItems = [  
+  const contextMenuItems = [
     ...(grid.current?.getSelectedRecords().length === 1
       ? [
           {

@@ -207,7 +207,7 @@ i18n
                     Names: 'Nazwy',
                     Country: 'Kraj',
                     Countries: 'Kraje',
-                    Manage: 'Zarządzaj',
+                    Manage: 'Zarządzaj' ,
                     States: 'Województwa',
                     State: 'Województwo',
                     'Manage States': 'Zarządzaj województwami',
