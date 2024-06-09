@@ -35,6 +35,11 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Divider from "@mui/material/Divider";
 import { Switch } from "@mui/material";
 
+// Ant design
+import type { DatePickerProps } from "antd";
+import { ConfigProvider, DatePicker } from "antd";
+import dayjs from "dayjs";
+
 interface AddEditUserComponentTemplateProps {
   refreshComponent: boolean;
   setRefreshComponent: (value: boolean) => void;
@@ -355,6 +360,36 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       disabled: false,
       required: registeredAddressSameAsResidence ? false : true,
     },
+    license_number: {
+      id: "license_number",
+      name: "License Number",
+      maxLength: 20,
+      format: /^[0-9a-zA-Z -]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: true,
+    },
+    ln_code: {
+      id: "ln_code",
+      name: "License Code",
+      maxLength: 20,
+      format: /^[0-9a-zA-Z -]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: true,
+    },
+    published_by: {
+      id: "ln_published_by",
+      name: "Published By",
+      maxLength: 100,
+      format: /^[a-zA-Z ]*$/,
+      style: { width: "46%", marginTop: "2rem" },
+      variant: "outlined",
+      disabled: false,
+      required: true,
+    },
   };
 
   //Basic information
@@ -402,6 +437,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     "registered_apartment_number",
     "registered_zip_code",
   ];
+
+  // Driver section
+  const driverFields = ["license_number", "ln_code", "published_by"];
 
   // ======================================== Controller ========================================
   const {
@@ -453,6 +491,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       registered_zip_code: data?.registered_zip_code || "",
       registered_country: data?.registered_country || "",
       registered_state: data?.registered_state.split("(")[0].trim() || "",
+      license_number: role === "Driver" ? data?.license_number || "" : "",
+      ln_code: role === "Driver" ? data?.ln_code || "" : "",
+      ln_published_by: role === "Driver" ? data?.ln_published_by || "" : "",
+      ln_release_date: role === "Driver" ? data?.ln_release_date || "" : "",
+      ln_expiration_date:
+        role === "Driver" ? data?.ln_expiration_date || "" : "",
     },
   });
 
@@ -466,7 +510,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     setResidenceStates(data);
   };
   React.useEffect(() => {
-    fetchStates();
+    if (residenceSelectedCountry) {
+      fetchStates();
+    }
   }, [residenceSelectedCountry]);
   // Get Residence States
 
@@ -482,7 +528,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     setCorrespondenceStates(data);
   };
   React.useEffect(() => {
-    fetchCorrespondenceStates();
+    if (correspondenceSelectedCountry) {
+      fetchCorrespondenceStates();
+    }
   }, [correspondenceSelectedCountry]);
 
   // ======================================== Registered ========================================
@@ -493,7 +541,9 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     setRegisteredStates(data);
   };
   React.useEffect(() => {
-    fetchRegisteredStates();
+    if (registeredSelectedCountry) {
+      fetchRegisteredStates();
+    }
   }, [registeredSelectedCountry]);
 
   // ======================================== Generate Username ========================================
@@ -514,6 +564,28 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       trigger("username");
     }
   }, [firstName, lastName]);
+
+  // ======================================== Driver Section ========================================
+  const defaultReleaseDate = data?.ln_release_date
+    ? dayjs(data.ln_release_date)
+    : null;
+  const defaultExpirationDate = data?.ln_expire_date
+    ? dayjs(data.ln_expire_date)
+    : null;
+
+  // const ln_release_dateOnChange: DatePickerProps["onChange"] = (
+  //   date,
+  //   dateString
+  // ) => {
+  //   console.log(date, dateString);
+  // };
+
+  // const ln_expiration_dateOnChange: DatePickerProps["onChange"] = (
+  //   date,
+  //   dateString
+  // ) => {
+  //   console.log(date, dateString);
+  // };
 
   //Form
   const [loading, setLoading] = React.useState(false);
@@ -588,8 +660,8 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
               .catch((error) => {
                 dispatch(stopLoading());
                 showSnackbar(error, "error");
-              })
-              dispatch(stopLoading());
+              });
+            dispatch(stopLoading());
           }
         })}
       >
@@ -612,7 +684,10 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                         key={fieldName}
                         id={`${fieldConfig.id}-input`}
                         label={
-                          fieldConfig.name ? t(fieldConfig.name) + "*" : null
+                          fieldConfig.name
+                            ? t(fieldConfig.name) +
+                              (fieldConfig.required ? "*" : "")
+                            : null
                         }
                         variant={fieldConfig.variant as any}
                         style={fieldConfig.style}
@@ -646,6 +721,105 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
         </div>
         {/* ======================== Basic information ========================*/}
 
+        {/* ======================== Driver information ========================*/}
+        {role === "Driver" && (
+          <div className="mb-10">
+            <div className="text-center text-xl font-black">
+              <Divider sx={{}}> {t("Driver Information")} </Divider>
+            </div>
+
+            <div className="flex justify-evenly">
+              <ConfigProvider
+                theme={{
+                  components: {
+                    DatePicker: {
+                      colorBgContainer: darkMode ? "#333" : "#fff",
+                      colorTextDescription: darkMode ? "#fff" : "#000",
+                      colorIcon: darkMode ? "#fff" : "#000",
+                      colorIconHover: darkMode ? "#fff" : "#000",
+                    },
+                  },
+                }}
+              >
+                <div>
+                  <div>
+                    <InputLabel>{t("License release date")}</InputLabel>
+                  </div>
+                  <DatePicker
+
+                    defaultValue={defaultReleaseDate}
+                    size="large"
+                    className={darkMode ? "text-white" : ""}
+                    placeholder=""
+                    style={{ minWidth: "100%" }}
+                  />
+                </div>
+                <div>
+                  <div>
+                    <InputLabel>{t("License expiration date")}</InputLabel>
+                  </div>
+                  <DatePicker
+                    defaultValue={defaultExpirationDate}
+                    size="large"
+                    className={darkMode ? "text-white" : ""}
+                    placeholder=""
+                  />
+                </div>
+              </ConfigProvider>
+            </div>
+
+            {Array(Math.ceil(driverFields.length / 2))
+              .fill(0)
+              .map((_, i) => {
+                const fieldNames = driverFields.slice(i * 2, i * 2 + 2);
+                return (
+                  <div className="flex justify-evenly" key={i}>
+                    {fieldNames.map((fieldName) => {
+                      const fieldConfig = fieldsConfig[fieldName];
+                      if (!fieldConfig) return null;
+                      return (
+                        <TextField
+                          key={fieldName}
+                          id={`${fieldConfig.id}-input`}
+                          label={
+                            fieldConfig.name
+                              ? t(fieldConfig.name) +
+                                (fieldConfig.required ? "*" : "")
+                              : null
+                          }
+                          variant={fieldConfig.variant as any}
+                          style={fieldConfig.style}
+                          error={errors[fieldConfig.id] ? true : false}
+                          disabled={fieldConfig.disabled}
+                          helperText={
+                            errors[fieldConfig.id]
+                              ? errors[fieldConfig.id].message
+                              : t(fieldConfig.hint) || null
+                          }
+                          {...register(fieldConfig.id, {
+                            required: {
+                              value: fieldConfig.required,
+                              message: `${t("Field is required")}`,
+                            },
+                            maxLength: {
+                              value: fieldConfig.maxLength,
+                              message: ` ${t("Field is too long")}`,
+                            },
+                            pattern: {
+                              value: fieldConfig.format,
+                              message: `${t("Field format is invalid")}`,
+                            },
+                          })}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })}
+          </div>
+        )}
+        {/* ======================== Driver information ========================*/}
+
         {/* ======================== Tax and Health ========================*/}
         <div className="text-center text-xl font-black mt-10">
           <Divider> {t("Tax and Health")} </Divider>
@@ -663,7 +837,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                     <TextField
                       key={fieldName}
                       id={`${fieldConfig.id}-input`}
-                      label={t(fieldConfig.name) + "*"}
+                      label={
+                        fieldConfig.name
+                          ? t(fieldConfig.name) +
+                            (fieldConfig.required ? "*" : "")
+                          : null
+                      }
                       variant={fieldConfig.variant as any}
                       style={fieldConfig.style}
                       error={errors[fieldConfig.id] ? true : false}
@@ -798,7 +977,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                     <TextField
                       key={fieldName}
                       id={`${fieldConfig.id}-input`}
-                      label={t(fieldConfig.name) + "*"}
+                      label={
+                        fieldConfig.name
+                          ? t(fieldConfig.name) +
+                            (fieldConfig.required ? "*" : "")
+                          : null
+                      }
                       variant={fieldConfig.variant as any}
                       style={fieldConfig.style}
                       error={errors[fieldConfig.id] ? true : false}
@@ -946,7 +1130,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                         <TextField
                           key={fieldName}
                           id={`${fieldConfig.id}-input`}
-                          label={t(fieldConfig.name) + "*"}
+                          label={
+                            fieldConfig.name
+                              ? t(fieldConfig.name) +
+                                (fieldConfig.required ? "*" : "")
+                              : null
+                          }
                           variant={fieldConfig.variant as any}
                           style={fieldConfig.style}
                           error={errors[fieldConfig.id] ? true : false}
@@ -1095,7 +1284,12 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                         <TextField
                           key={fieldName}
                           id={`${fieldConfig.id}-input`}
-                          label={t(fieldConfig.name) + "*"}
+                          label={
+                            fieldConfig.name
+                              ? t(fieldConfig.name) +
+                                (fieldConfig.required ? "*" : "")
+                              : null
+                          }
                           variant={fieldConfig.variant as any}
                           style={fieldConfig.style}
                           error={errors[fieldConfig.id] ? true : false}

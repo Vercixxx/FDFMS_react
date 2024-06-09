@@ -137,7 +137,7 @@ i18n
                     'Export': 'Export',
                     'Select columns': 'Select columns',
                     'No records found': 'No records found',
-                    'Field is required': 'is required',
+                    'Field is required': 'Field is required',
                     'Field is too long': 'Field is too long',
                     'Field format is invalid': 'Field format is invalid',
                     'Tax Office Name': 'Tax Office Name',
@@ -174,6 +174,7 @@ i18n
                     'Registered House Number': 'Registered House Number',
                     'Registered Apartment Number': 'Registered Apartment Number',
                     'User class': 'User class',
+                    'Profile': 'Profile',
                 },
             },
             PL: {
@@ -329,6 +330,7 @@ i18n
                     'Registered House Number': 'Numer domu zameldowania',
                     'Registered Apartment Number': 'Numer mieszkania zameldowania',
                     'User class': 'Klasa użytkownika',
+                    'Profile': 'Profil',
 
 
                 },

@@ -942,9 +942,10 @@ const ManageUsersComponent: React.FC = () => {
                     )
                       .then((response) => {
                         userData = response;
-                        console.log(userData);
 
                         if (selectedRecord && selectedRecord.length == 1) {
+                          console.log(userData);
+                          
                           dispatch(
                             openDrawer({
                               title: t("Edit User"),
@@ -953,6 +954,7 @@ const ManageUsersComponent: React.FC = () => {
                                 <AddEditUserComponent
                                   refreshComponent={refreshComponent}
                                   setRefreshComponent={setRefreshComponent}
+                                  role={selectedRecord[0].user_role}
                                   data={userData}
                                 />
                               ),
