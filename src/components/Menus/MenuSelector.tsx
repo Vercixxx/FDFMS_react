@@ -23,8 +23,7 @@ import { useDispatch } from "react-redux";
 import { setCurrentMainComponent } from "../../store/currentMainComponentSlice";
 
 // Import menus
-import { useHRMenuItems } from '../Menus/HRMenu';
-
+import { useHRMenuItems } from "../Menus/HRMenu";
 
 type MenuItem = Required<typeof List>["items"][number];
 
@@ -77,7 +76,7 @@ const MyMenu: React.FC = () => {
       }
     } else {
       const selectedParentKey = items.find((rootItem) =>
-        rootItem.children?.some((child) =>
+        rootItem.children?.some((child: { children: any[]; }) =>
           child.children?.some((grandChild) => grandChild.key === item.key)
         )
       )?.key;
@@ -124,8 +123,8 @@ const MyMenu: React.FC = () => {
     }
   };
 
-  const renderMenuItem = (item, level = 0) => (
-    <div key={item.key}>
+  const renderMenuItem = (item, level = 0, index = 0) => (
+    <div key={`${item.key}-${index}`}> 
       <ListItemButton
         disableRipple
         onClick={() => handleClick(item)}
@@ -154,7 +153,9 @@ const MyMenu: React.FC = () => {
       {item.children && (
         <Collapse in={openKeys.includes(item.key)} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {item.children.map((child) => renderMenuItem(child, level + 1))}
+            {item.children.map(
+              (child, index) => renderMenuItem(child, level + 1, index)
+            )}
           </List>
         </Collapse>
       )}

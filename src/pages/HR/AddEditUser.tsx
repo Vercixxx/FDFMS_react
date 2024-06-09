@@ -494,9 +494,18 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
       license_number: role === "Driver" ? data?.license_number || "" : "",
       ln_code: role === "Driver" ? data?.ln_code || "" : "",
       ln_published_by: role === "Driver" ? data?.ln_published_by || "" : "",
-      ln_release_date: role === "Driver" ? data?.ln_release_date || "" : "",
-      ln_expiration_date:
-        role === "Driver" ? data?.ln_expiration_date || "" : "",
+      ln_release_date:
+        role === "Driver"
+          ? data && dayjs(data.ln_release_date).isValid()
+            ? dayjs(data.ln_release_date)
+            : ""
+          : "",
+      ln_expire_date:
+        role === "Driver"
+          ? data && dayjs(data.ln_expire_date).isValid()
+            ? dayjs(data.ln_expire_date)
+            : ""
+          : "",
     },
   });
 
@@ -565,28 +574,6 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
     }
   }, [firstName, lastName]);
 
-  // ======================================== Driver Section ========================================
-  const defaultReleaseDate = data?.ln_release_date
-    ? dayjs(data.ln_release_date)
-    : null;
-  const defaultExpirationDate = data?.ln_expire_date
-    ? dayjs(data.ln_expire_date)
-    : null;
-
-  // const ln_release_dateOnChange: DatePickerProps["onChange"] = (
-  //   date,
-  //   dateString
-  // ) => {
-  //   console.log(date, dateString);
-  // };
-
-  // const ln_expiration_dateOnChange: DatePickerProps["onChange"] = (
-  //   date,
-  //   dateString
-  // ) => {
-  //   console.log(date, dateString);
-  // };
-
   //Form
   const [loading, setLoading] = React.useState(false);
 
@@ -633,9 +620,13 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
           }
 
           const userData = getValues();
+          userData.ln_release_date = dayjs(userData.ln_release_date).format('YYYY-MM-DD');
+          userData.ln_expire_date = dayjs(userData.ln_expire_date).format('YYYY-MM-DD');
 
           if (!data) {
             dispatch(startLoading());
+            console.log(userData);
+            
             await AddUser(userData)
               .then((response) => {
                 dispatch(stopLoading());
@@ -745,24 +736,37 @@ const AddEditUserComponent: React.FC<AddEditUserComponentTemplateProps> = ({
                   <div>
                     <InputLabel>{t("License release date")}</InputLabel>
                   </div>
-                  <DatePicker
-
-                    defaultValue={defaultReleaseDate}
-                    size="large"
-                    className={darkMode ? "text-white" : ""}
-                    placeholder=""
-                    style={{ minWidth: "100%" }}
+                  <Controller
+                    control={control}
+                    name="ln_release_date"
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        size="large"
+                        className={darkMode ? "text-white" : ""}
+                        placeholder=""
+                        style={{ minWidth: "100%" }}
+                      />
+                    )}
                   />
                 </div>
                 <div>
                   <div>
                     <InputLabel>{t("License expiration date")}</InputLabel>
                   </div>
-                  <DatePicker
-                    defaultValue={defaultExpirationDate}
-                    size="large"
-                    className={darkMode ? "text-white" : ""}
-                    placeholder=""
+
+                  <Controller
+                    control={control}
+                    name="ln_expire_date"
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        size="large"
+                        className={darkMode ? "text-white" : ""}
+                        placeholder=""
+                        style={{ minWidth: "100%" }}
+                      />
+                    )}
                   />
                 </div>
               </ConfigProvider>

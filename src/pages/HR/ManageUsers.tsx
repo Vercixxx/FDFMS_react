@@ -119,11 +119,7 @@ const ManageUsersComponent: React.FC = () => {
     await getUsers(RequestParams.current)
       .then((response) => {
         setResponse(response);
-        if (response.results.length > 0) {
-          Object.entries(response.results[0]).map(([key, value]) => {
-            console.log(`${key}`);
-          });
-        }
+
       })
       .catch((error) => {
         showSnackbar(error.message, "error");
@@ -914,7 +910,6 @@ const ManageUsersComponent: React.FC = () => {
                   {userRoles.map((role) => (
                     <MenuItem onClick={() => addUserWithRole(role)}>
                       <div className="flex justify-between hover:scale-105">
-                        {/* <PlusCircleFilled className="me-2" /> */}
                         {t("Add")} {role}
                       </div>
                     </MenuItem>
@@ -942,10 +937,10 @@ const ManageUsersComponent: React.FC = () => {
                     )
                       .then((response) => {
                         userData = response;
+                        console.log(userData);
+                        
 
                         if (selectedRecord && selectedRecord.length == 1) {
-                          console.log(userData);
-                          
                           dispatch(
                             openDrawer({
                               title: t("Edit User"),
